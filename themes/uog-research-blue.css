@@ -1,0 +1,217 @@
+/* ==========================================================================
+   Theme: UoG Research Blue
+   Purpose: Formal academic presentations — PhD, APR, conference slides
+   Palette: University Blue dominant, clean white/light-slate background
+   ========================================================================== */
+
+@import url('../viewport-base.css');
+@import url('../grid-system.css');
+@import url('../animations.css');
+@import url('../slide-types.css');
+
+:root {
+  /* === Typography === */
+  /* TODO: Replace with official UoG typeface after scraping typography page */
+  --font-display: 'Georgia', 'Times New Roman', serif;
+  --font-body: 'system-ui', '-apple-system', 'Segoe UI', 'Helvetica Neue', sans-serif;
+  --font-mono: 'SF Mono', 'Cascadia Code', 'Consolas', monospace;
+
+  /* === Type Scale (1920×1080 stage) — UoG Institutional === */
+  --title-size:       clamp(60px, 3.5vw, 76px);   /* Main titles */
+  --subtitle-size:    clamp(28px, 1.7vw, 36px);   /* Subtitle / context */
+  --bullet-size:      clamp(38px, 2.3vw, 52px);   /* Big bullet text */
+  --supporting-size:  clamp(30px, 1.8vw, 40px);   /* Supporting paragraphs */
+  --caption-size:     clamp(24px, 1.4vw, 30px);   /* Figure/table captions */
+  --footer-size:      clamp(20px, 1.2vw, 26px);   /* Footer, meta, dates */
+  --h2-size:          clamp(48px, 2.8vw, 64px);   /* Second-level headings */
+  --h3-size:          clamp(36px, 2.1vw, 48px);   /* Third-level headings */
+  --small-size:       clamp(18px, 1vw, 24px);     /* Small UI / badges */
+  --body-size:        clamp(30px, 1.8vw, 40px);   /* General body (alias) */
+
+  /* === Spacing (1920x1080 stage) === */
+  --slide-padding: clamp(48px, 5vw, 96px);
+  --content-gap: clamp(20px, 2.2vw, 40px);
+  --section-gap: clamp(32px, 3.3vw, 64px);
+
+  /* === Primary Brand === */
+  --uog-blue: #011451;
+  --uog-blue-rgb: 1, 20, 81;
+
+  /* === Theme: Light Academic === */
+  --slide-bg: #FAFAF8;
+  --slide-bg-alt: #F0EEE8;           /* warm off-white for alternating slides */
+  --text-primary: #011451;            /* University Blue as primary ink */
+  --text-secondary: #3A3D42;          /* dark slate for body text */
+  --text-muted: #6B6E74;              /* muted grey for captions/footnotes */
+  --border-color: rgba(1, 20, 81, 0.12);
+  --divider-color: rgba(1, 20, 81, 0.08);
+
+  /* === Accent colours (from secondary palette) === */
+  --accent: #005398;                  /* UoG Dark Blue */
+  --accent-rgb: 0, 83, 152;
+  --accent-warm: #7D2239;             /* UoG Dark Red */
+  --accent-warm-rgb: 125, 34, 57;
+  --accent-cool: #4DBBC6;             /* UoG Light Blue — accents only */
+  --accent-cool-rgb: 77, 187, 198;
+  --highlight: #F2D25C;               /* UoG Light Yellow — accents only */
+  --highlight-rgb: 242, 210, 92;
+
+  /* === Data palette (charts, graphs, KPI indicators) === */
+  --data-1: #011451;                  /* University Blue */
+  --data-2: #005398;                  /* Dark Blue */
+  --data-3: #405D18;                  /* Dark Green */
+  --data-4: #7D2239;                  /* Dark Red */
+  --data-5: #4C2683;                  /* Dark Purple */
+  --data-6: #A60367;                  /* Dark Pink */
+  --data-light-1: #4DBBC6;            /* Light Blue */
+  --data-light-2: #81C071;            /* Light Green */
+  --data-light-3: #F2D25C;            /* Light Yellow */
+  --data-light-4: #E98BAF;            /* Light Pink */
+  --data-light-5: #A5A1CE;            /* Light Purple */
+
+  /* === Decorative === */
+  --brand-stripe-color: var(--uog-blue);
+  --brand-stripe-width: 6px;
+  --logo-max-height: 48px;
+  --footer-logo-max-height: 32px;
+
+  /* === Shadows === */
+  --shadow-sm: 0 1px 3px rgba(1, 20, 81, 0.08);
+  --shadow-md: 0 4px 12px rgba(1, 20, 81, 0.10);
+  --shadow-lg: 0 8px 24px rgba(1, 20, 81, 0.12);
+
+  /* === Component Tokens === */
+  --card-bg: #FFFFFF;
+  --card-border: rgba(1, 20, 81, 0.10);
+  --callout-bg: #F0EEE8;
+  --code-bg: rgba(1, 20, 81, 0.04);
+  --partner-logo-max-height: 60px;
+
+  /* === Animation timing === */
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --duration-fast: 200ms;
+  --duration-normal: 400ms;
+  --duration-slow: 700ms;
+
+  /* === Border radius === */
+  --radius-sm: 2px;
+  --radius-md: 4px;
+  --radius-lg: 8px;
+}
+
+/* ==========================================================================
+   Theme-Specific Slide Type Overrides — Research Blue
+   Academic, subtle, warm-scholarly.
+   ========================================================================== */
+
+/* Cover */
+.slide.title-slide {
+  background: var(--uog-blue);
+  color: #FFFFFF;
+}
+
+/* Section Divider */
+.slide.section-divider {
+  background: var(--uog-blue);
+  color: #FFFFFF;
+}
+
+/* Research Question — Dark Blue accent bar */
+.slide.research-question .question-block {
+  border-left-color: var(--accent, #005398);
+}
+
+/* Problem Framing — Warm split divider */
+.slide.problem-framing .problem-statement {
+  border-right-color: var(--divider-color);
+}
+
+/* System Architecture — Subtle card shadows */
+.slide.system-architecture .arch-card {
+  box-shadow: var(--shadow-sm);
+}
+
+/* Pipeline / DAG — Dark Blue nodes */
+.slide.pipeline-dag .pipeline-node {
+  background: var(--accent, #005398);
+  color: #FFFFFF;
+}
+
+.slide.pipeline-dag .pipeline-arrow {
+  background: var(--accent, #005398);
+}
+
+.slide.pipeline-dag .pipeline-arrow::after {
+  border-left-color: var(--accent, #005398);
+}
+
+/* Method / Algorithm — Numbered accent circles */
+.slide.method-algorithm .method-step::before {
+  background: var(--accent, #005398);
+  color: #FFFFFF;
+}
+
+/* Benchmark KPI — University Blue values on light bg */
+.slide.benchmark-kpi .kpi-hero {
+  border-color: var(--uog-blue);
+  background: rgba(1, 20, 81, 0.03);
+}
+
+.slide.benchmark-kpi .kpi-value {
+  color: var(--uog-blue);
+}
+
+/* Comparison — Winner gets blue-tinted background */
+.slide.comparison-ablation .compare-panel.winner {
+  border-color: var(--uog-blue);
+  background: rgba(1, 20, 81, 0.03);
+}
+
+/* Timeline — Dark Blue markers */
+.slide.timeline-roadmap .timeline {
+  border-left-color: var(--accent, #005398);
+}
+
+.slide.timeline-roadmap .event-marker {
+  background: var(--accent, #005398);
+  color: #FFFFFF;
+}
+
+/* Limitation / Risk — Semantic severity colours */
+.slide.limitation-risk .risk-cell.critical {
+  border-left-color: var(--negative, #7D2239);
+}
+
+.slide.limitation-risk .risk-cell.high {
+  border-left-color: var(--highlight, #F2D25C);
+}
+
+/* Closing — Solid University Blue */
+.slide.closing-takeaway {
+  background: var(--uog-blue);
+  color: #FFFFFF;
+}
+
+.slide.closing-takeaway .takeaway-list li::before {
+  color: var(--highlight, #F2D25C);
+}
+
+/* Appendix — Smaller table in University Blue */
+.slide.appendix-table thead th {
+  color: var(--uog-blue);
+  border-bottom-color: var(--uog-blue);
+}
+
+/* Architecture layers — Blue accent on highlight */
+.arch-layer.layer-highlight {
+  border-left-color: var(--accent, #005398);
+}
+
+/* Print Overrides */
+@media print {
+  .slide {
+    background: #FFFFFF !important;
+    color: var(--uog-blue) !important;
+  }
+}

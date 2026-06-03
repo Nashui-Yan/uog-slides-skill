@@ -1,0 +1,46 @@
+# System
+.DS_Store
+Thumbs.db
+
+# Dependencies
+node_modules/
+
+# Build / dist
+dist/
+.tmp/
+temp/
+
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Cache
+.cache/
+
+# Editors
+.vscode/
+.idea/
+
+# Logs
+*.log
+*.bak
+*.swp
+*.swo
+
+# Test artifacts
+playwright-report/
+test-results/
+coverage/
+
+# Temp
+*.tmp
+*.orig
+
+# Generated debug / analysis images (keep only if needed for audit)
+assets/logos/main-uog-logo-artwork/derived/*debug*.png
+assets/logos/main-uog-logo-artwork/derived/*analysis*.png
+
+# Screenshots
+examples/**/preview-*.png
+examples/**/screenshot-*.png

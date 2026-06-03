@@ -1,0 +1,183 @@
+/* ==========================================================================
+   grid-system.css — 12-Column Grid System
+   ==========================================================================
+   Fixed 1920px stage grid. All visual values via CSS custom properties.
+   Themes define --grid-columns, --grid-gutter, --grid-margin in :root.
+
+   Column width at defaults (80px margin, 24px gutter, 12 cols):
+     (1920 - 2*80 - 11*24) / 12 = 1496/12 ≈ 124.67px per column
+   ========================================================================== */
+
+/* ==========================================================================
+   Grid Container
+   ========================================================================== */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(var(--grid-columns, 12), 1fr);
+  gap: var(--grid-gutter, 24px);
+  width: 100%;
+}
+
+.grid-12 { grid-template-columns: repeat(12, 1fr); }
+.grid-10 { grid-template-columns: repeat(10, 1fr); }
+.grid-8  { grid-template-columns: repeat(8, 1fr); }
+.grid-6  { grid-template-columns: repeat(6, 1fr); }
+.grid-4  { grid-template-columns: repeat(4, 1fr); }
+.grid-3  { grid-template-columns: repeat(3, 1fr); }
+.grid-2  { grid-template-columns: repeat(2, 1fr); }
+
+/* Full-width span */
+.grid-full { grid-column: 1 / -1; }
+
+/* ==========================================================================
+   Column Span Utilities
+   ========================================================================== */
+.col-1  { grid-column: span 1; }
+.col-2  { grid-column: span 2; }
+.col-3  { grid-column: span 3; }
+.col-4  { grid-column: span 4; }
+.col-5  { grid-column: span 5; }
+.col-6  { grid-column: span 6; }
+.col-7  { grid-column: span 7; }
+.col-8  { grid-column: span 8; }
+.col-9  { grid-column: span 9; }
+.col-10 { grid-column: span 10; }
+.col-11 { grid-column: span 11; }
+.col-12 { grid-column: span 12; }
+
+/* ==========================================================================
+   Auto-Fit Responsive Grids
+   ========================================================================== */
+.grid-auto-3 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(520px, 1fr));
+  gap: var(--grid-gutter, 24px);
+}
+
+.grid-auto-4 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+  gap: var(--grid-gutter, 24px);
+}
+
+.grid-auto-6 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: var(--grid-gutter, 24px);
+}
+
+/* ==========================================================================
+   Subgrid Support (progressive enhancement)
+   ========================================================================== */
+.grid-sub {
+  display: grid;
+  grid-template-columns: subgrid;
+  grid-column: span var(--grid-sub-span, 1);
+}
+
+@supports not (grid-template-columns: subgrid) {
+  .grid-sub {
+    grid-template-columns: repeat(var(--grid-sub-span, 1), 1fr);
+  }
+}
+
+.grid-sub-2 { --grid-sub-span: 2; }
+.grid-sub-3 { --grid-sub-span: 3; }
+.grid-sub-4 { --grid-sub-span: 4; }
+
+/* ==========================================================================
+   Gap Overrides
+   ========================================================================== */
+.grid-gap-xs { gap: 8px; }
+.grid-gap-sm { gap: 16px; }
+.grid-gap-md { gap: var(--grid-gutter, 24px); }
+.grid-gap-lg { gap: clamp(32px, 3.3vw, 64px); }
+.grid-gap-xl { gap: clamp(48px, 5vw, 96px); }
+
+/* ==========================================================================
+   Grid Area Templates
+   ========================================================================== */
+
+/* Header + body */
+.grid-layout-header-body {
+  display: grid;
+  grid-template-areas:
+    "header header"
+    "body   body";
+  grid-template-rows: auto 1fr;
+  gap: var(--grid-gutter, 24px);
+}
+
+.grid-layout-header-body > .grid-area-header { grid-area: header; }
+.grid-layout-header-body > .grid-area-body   { grid-area: body; }
+
+/* Two column (50/50) */
+.grid-layout-2col {
+  display: grid;
+  grid-template-areas: "left right";
+  grid-template-columns: 1fr 1fr;
+  gap: var(--section-gap, clamp(32px, 3.3vw, 64px));
+}
+
+.grid-layout-2col > .grid-area-left  { grid-area: left; }
+.grid-layout-2col > .grid-area-right { grid-area: right; }
+
+/* Wide left (60/40) */
+.grid-layout-wide-left {
+  display: grid;
+  grid-template-areas: "left right";
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: var(--section-gap, clamp(32px, 3.3vw, 64px));
+}
+
+.grid-layout-wide-left > .grid-area-left  { grid-area: left; }
+.grid-layout-wide-left > .grid-area-right { grid-area: right; }
+
+/* Wide right (40/60) */
+.grid-layout-wide-right {
+  display: grid;
+  grid-template-areas: "left right";
+  grid-template-columns: 0.8fr 1.2fr;
+  gap: var(--section-gap, clamp(32px, 3.3vw, 64px));
+}
+
+.grid-layout-wide-right > .grid-area-left  { grid-area: left; }
+.grid-layout-wide-right > .grid-area-right { grid-area: right; }
+
+/* Three column (equal thirds) */
+.grid-layout-3col {
+  display: grid;
+  grid-template-areas: "a b c";
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: var(--grid-gutter, 24px);
+}
+
+.grid-layout-3col > .grid-area-a { grid-area: a; }
+.grid-layout-3col > .grid-area-b { grid-area: b; }
+.grid-layout-3col > .grid-area-c { grid-area: c; }
+
+/* 2×2 box grid */
+.grid-layout-4box {
+  display: grid;
+  grid-template-areas:
+    "a b"
+    "c d";
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: var(--grid-gutter, 24px);
+}
+
+.grid-layout-4box > .grid-area-a { grid-area: a; }
+.grid-layout-4box > .grid-area-b { grid-area: b; }
+.grid-layout-4box > .grid-area-c { grid-area: c; }
+.grid-layout-4box > .grid-area-d { grid-area: d; }
+
+/* ==========================================================================
+   Alignment Utilities
+   ========================================================================== */
+.grid-align-center  { align-items: center; }
+.grid-align-start   { align-items: start; }
+.grid-align-end     { align-items: end; }
+.grid-justify-center { justify-items: center; }
+.grid-place-center   { place-items: center; }
+.grid-place-start    { place-items: start; }

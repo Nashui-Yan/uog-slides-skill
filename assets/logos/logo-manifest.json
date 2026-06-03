@@ -1,0 +1,284 @@
+{
+  "version": "0.1.0",
+  "source_directory": "assets/logos/main-uog-logo-artwork",
+  "audit_date": "2026-06-03",
+  "selected_defaults": {
+    "title_light": {
+      "path": "assets/logos/main-uog-logo-artwork/SVG/Unboxed colour logo blue text.svg",
+      "format": "svg",
+      "variant": "full_colour_blue_text_unboxed",
+      "reason": "Full-colour crest with University Blue wordmark. Pure vector, no font dependencies. Ideal for white/light title slides (uog-research-blue, uog-swiss-data)."
+    },
+    "title_dark": {
+      "path": "assets/logos/main-uog-logo-artwork/SVG/Unboxed colour logo white text.svg",
+      "format": "svg",
+      "variant": "full_colour_white_text_unboxed",
+      "reason": "Full-colour crest with white wordmark. Pure vector. Ideal for dark title slides (uog-energy-noir)."
+    },
+    "footer_light": {
+      "path": "assets/logos/main-uog-logo-artwork/SVG/Unboxed mono logo blue.svg",
+      "format": "svg",
+      "variant": "mono_blue_unboxed",
+      "reason": "Single-colour University Blue (#011451) crest + wordmark. Clean at small sizes. Ideal for footer placement on light backgrounds."
+    },
+    "footer_dark": {
+      "path": "assets/logos/main-uog-logo-artwork/SVG/Unboxed mono logo white.svg",
+      "format": "svg",
+      "variant": "mono_white_unboxed",
+      "reason": "Single-colour white crest + wordmark. Ideal for footer placement on dark backgrounds."
+    },
+    "partner_row": {
+      "path": "assets/logos/main-uog-logo-artwork/SVG/Unboxed colour logo blue text.svg",
+      "format": "svg",
+      "variant": "full_colour_blue_text_unboxed",
+      "reason": "Full-colour horizontal logo for partner/sponsor row. Use at controlled size (max 60px height) to not overpower partner logos. Same file as title_light — sized smaller."
+    }
+  },
+  "fallback_raster": {
+    "title_light_png": "assets/logos/main-uog-logo-artwork/PNG/Unboxed colour logo blue text.png",
+    "title_dark_png": "assets/logos/main-uog-logo-artwork/PNG/Unboxed colour logo white text.png",
+    "footer_light_png": "assets/logos/main-uog-logo-artwork/PNG/Unboxed mono logo blue.png",
+    "footer_dark_png": "assets/logos/main-uog-logo-artwork/PNG/Unboxed mono logo white.png",
+    "note": "984×533px RGBA PNGs. Use only if SVG rendering is unavailable (e.g., PDF export via Playwright that rasterises SVGs poorly)."
+  },
+  "all_assets": [
+    {
+      "path": "SVG/Boxed colour logo.svg",
+      "format": "svg",
+      "size_bytes": 20098,
+      "width": 235.28,
+      "height": 126.98,
+      "vector": true,
+      "transparent_background": true,
+      "detected_variant": "full_colour_boxed",
+      "colours": ["#011451", "#008C45", "#0595D3", "#078844", "#86BC40", "#ABDBF6", "#E2A125", "#E33525", "#FFD024"],
+      "recommended_use": [],
+      "avoid_reason": "Boxed frame constrains layout flexibility. Prefer unboxed variant for slides."
+    },
+    {
+      "path": "SVG/Unboxed colour logo blue text.svg",
+      "format": "svg",
+      "size_bytes": 18596,
+      "width": 235.28,
+      "height": 126.98,
+      "vector": true,
+      "transparent_background": true,
+      "detected_variant": "full_colour_blue_text_unboxed",
+      "colours": ["#011451", "#0098D5", "#01964B", "#029048", "#7FC142", "#99D9F7", "#E19F34", "#EE402C", "#FFCE38"],
+      "recommended_use": ["title_light", "partner_row", "footer_light_fallback"],
+      "avoid_reason": null
+    },
+    {
+      "path": "SVG/Unboxed colour logo white text.svg",
+      "format": "svg",
+      "size_bytes": 20086,
+      "width": 235.28,
+      "height": 126.98,
+      "vector": true,
+      "transparent_background": true,
+      "detected_variant": "full_colour_white_text_unboxed",
+      "colours": ["#011451", "#008C45", "#0595D3", "#078844", "#86BC40", "#ABDBF6", "#E2A125", "#E33525", "#FFD024"],
+      "recommended_use": ["title_dark", "footer_dark_fallback"],
+      "avoid_reason": null
+    },
+    {
+      "path": "SVG/Unboxed mono logo black.svg",
+      "format": "svg",
+      "size_bytes": 17657,
+      "width": 235.28,
+      "height": 126.98,
+      "vector": true,
+      "transparent_background": true,
+      "detected_variant": "mono_black_unboxed",
+      "colours": ["#000000", "#ffffff", "#029048"],
+      "recommended_use": ["print_only"],
+      "avoid_reason": "Black monochrome — reserved for print/grayscale use only. Not suitable for on-screen slides where University Blue brand presence is required."
+    },
+    {
+      "path": "SVG/Unboxed mono logo blue.svg",
+      "format": "svg",
+      "size_bytes": 17918,
+      "width": 235.28,
+      "height": 126.98,
+      "vector": true,
+      "transparent_background": true,
+      "detected_variant": "mono_blue_unboxed",
+      "colours": ["#011451", "#ffffff", "#029048"],
+      "recommended_use": ["footer_light"],
+      "avoid_reason": null
+    },
+    {
+      "path": "SVG/Unboxed mono logo white.svg",
+      "format": "svg",
+      "size_bytes": 17310,
+      "width": 235.28,
+      "height": 126.98,
+      "vector": true,
+      "transparent_background": true,
+      "detected_variant": "mono_white_unboxed",
+      "colours": ["#ffffff", "#99d9f7", "#029048"],
+      "recommended_use": ["footer_dark", "section_divider_dark"],
+      "avoid_reason": null
+    },
+    {
+      "path": "PNG/Boxed colour logo.png",
+      "format": "png",
+      "size_bytes": 34079,
+      "width": 984,
+      "height": 533,
+      "vector": false,
+      "transparent_background": true,
+      "detected_variant": "full_colour_boxed_raster",
+      "recommended_use": [],
+      "avoid_reason": "Raster, boxed frame. SVGs always preferred for web. Only use if SVG is incompatible with target renderer."
+    },
+    {
+      "path": "PNG/Unboxed colour logo blue text.png",
+      "format": "png",
+      "size_bytes": 32698,
+      "width": 984,
+      "height": 533,
+      "vector": false,
+      "transparent_background": true,
+      "detected_variant": "full_colour_blue_text_unboxed_raster",
+      "recommended_use": ["svg_fallback"],
+      "avoid_reason": "Raster fallback only. 984×533 is adequate resolution for 1920×1080 stage (~100px logo height)."
+    },
+    {
+      "path": "PNG/Unboxed colour logo white text.png",
+      "format": "png",
+      "size_bytes": 33382,
+      "width": 984,
+      "height": 533,
+      "vector": false,
+      "transparent_background": true,
+      "detected_variant": "full_colour_white_text_unboxed_raster",
+      "recommended_use": ["svg_fallback"],
+      "avoid_reason": "Raster fallback only."
+    },
+    {
+      "path": "PNG/Unboxed mono logo black.png",
+      "format": "png",
+      "size_bytes": 20852,
+      "width": 984,
+      "height": 533,
+      "vector": false,
+      "transparent_background": true,
+      "detected_variant": "mono_black_unboxed_raster",
+      "recommended_use": ["print_only"],
+      "avoid_reason": "Raster, black monochrome — print/grayscale only."
+    },
+    {
+      "path": "PNG/Unboxed mono logo blue.png",
+      "format": "png",
+      "size_bytes": 29462,
+      "width": 984,
+      "height": 533,
+      "vector": false,
+      "transparent_background": true,
+      "detected_variant": "mono_blue_unboxed_raster",
+      "recommended_use": ["svg_fallback"],
+      "avoid_reason": "Raster fallback only."
+    },
+    {
+      "path": "PNG/Unboxed mono logo white.png",
+      "format": "png",
+      "size_bytes": 21906,
+      "width": 984,
+      "height": 533,
+      "vector": false,
+      "transparent_background": true,
+      "detected_variant": "mono_white_unboxed_raster",
+      "recommended_use": ["svg_fallback"],
+      "avoid_reason": "Raster fallback only."
+    },
+    {
+      "path": "EPS/Boxed colour logo.eps",
+      "format": "eps",
+      "size_bytes": 1111166,
+      "width": null,
+      "height": null,
+      "vector": true,
+      "transparent_background": null,
+      "detected_variant": "full_colour_boxed_print",
+      "recommended_use": [],
+      "avoid_reason": "EPS is print-only format. Not web-compatible. Boxed frame."
+    },
+    {
+      "path": "EPS/Unboxed colour logo blue text.eps",
+      "format": "eps",
+      "size_bytes": 1114402,
+      "width": null,
+      "height": null,
+      "vector": true,
+      "transparent_background": null,
+      "detected_variant": "full_colour_blue_text_unboxed_print",
+      "recommended_use": [],
+      "avoid_reason": "EPS is print-only format. Not web-compatible."
+    },
+    {
+      "path": "EPS/Unboxed colour logo white text.eps",
+      "format": "eps",
+      "size_bytes": 1114118,
+      "width": null,
+      "height": null,
+      "vector": true,
+      "transparent_background": null,
+      "detected_variant": "full_colour_white_text_unboxed_print",
+      "recommended_use": [],
+      "avoid_reason": "EPS is print-only format. Not web-compatible."
+    },
+    {
+      "path": "EPS/Unboxed mono logo black.eps",
+      "format": "eps",
+      "size_bytes": 1113474,
+      "width": null,
+      "height": null,
+      "vector": true,
+      "transparent_background": null,
+      "detected_variant": "mono_black_unboxed_print",
+      "recommended_use": [],
+      "avoid_reason": "EPS is print-only format. Not web-compatible."
+    },
+    {
+      "path": "EPS/Unboxed mono logo blue.eps",
+      "format": "eps",
+      "size_bytes": 1111450,
+      "width": null,
+      "height": null,
+      "vector": true,
+      "transparent_background": null,
+      "detected_variant": "mono_blue_unboxed_print",
+      "recommended_use": [],
+      "avoid_reason": "EPS is print-only format. Not web-compatible."
+    },
+    {
+      "path": "EPS/Unboxed mono logo white.eps",
+      "format": "eps",
+      "size_bytes": 1110746,
+      "width": null,
+      "height": null,
+      "vector": true,
+      "transparent_background": null,
+      "detected_variant": "mono_white_unboxed_print",
+      "recommended_use": [],
+      "avoid_reason": "EPS is print-only format. Not web-compatible."
+    },
+    {
+      "path": "Unboxed colour logo blue text stationery.png",
+      "format": "png",
+      "size_bytes": 29453,
+      "width": 651,
+      "height": 202,
+      "vector": false,
+      "transparent_background": true,
+      "detected_variant": "full_colour_blue_text_unboxed_stationery",
+      "recommended_use": [],
+      "avoid_reason": "Small stationery-size PNG (651×202). Too small for 1920×1080 slide stage. Use the standard 984×533 PNG or SVG instead."
+    }
+  ],
+  "manual_review_needed": [
+    "Verify the University of Glasgow brand toolkit logo page (https://www.gla.ac.uk/myglasgow/staff/brandtoolkit/logos/) for clearspace requirements",
+    "Verify minimum display size for the UoG crest — the 235.28×126.98 viewBox corresponds to a horizontal aspect ratio of ~1.85:1; at 30px height this means ~55px width"
+  ]
+}

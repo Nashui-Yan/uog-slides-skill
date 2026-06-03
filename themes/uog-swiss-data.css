@@ -1,0 +1,255 @@
+/* ==========================================================================
+   Theme: UoG Swiss Data
+   Purpose: Strict grid, data-first — benchmark results, tables, KPIs, methods
+   Palette: Neutral ground with University Blue as the singular anchor colour
+   ========================================================================== */
+
+@import url('../viewport-base.css');
+@import url('../grid-system.css');
+@import url('../animations.css');
+@import url('../slide-types.css');
+
+:root {
+  /* === Typography === */
+  /* TODO: Replace with official UoG typeface after scraping typography page */
+  --font-display: 'Helvetica Neue', 'system-ui', sans-serif;
+  --font-body: 'Helvetica Neue', 'Inter', 'system-ui', sans-serif;
+  --font-mono: 'SF Mono', 'JetBrains Mono', 'Consolas', monospace;
+
+  /* === Type Scale (1920×1080 stage) — UoG Institutional === */
+  --title-size:       clamp(60px, 3.5vw, 76px);   /* Main titles */
+  --subtitle-size:    clamp(28px, 1.7vw, 36px);   /* Subtitle / context */
+  --bullet-size:      clamp(38px, 2.3vw, 52px);   /* Big bullet text */
+  --supporting-size:  clamp(30px, 1.8vw, 40px);   /* Supporting paragraphs */
+  --caption-size:     clamp(24px, 1.4vw, 30px);   /* Figure/table captions */
+  --footer-size:      clamp(20px, 1.2vw, 26px);   /* Footer, meta, dates */
+  --h2-size:          clamp(48px, 2.8vw, 64px);   /* Second-level headings */
+  --h3-size:          clamp(36px, 2.1vw, 48px);   /* Third-level headings */
+  --small-size:       clamp(18px, 1vw, 24px);     /* Small UI / badges */
+  --body-size:        clamp(30px, 1.8vw, 40px);   /* General body (alias) */
+
+  /* === Spacing (1920x1080 stage) — tighter grid === */
+  --slide-padding: clamp(40px, 4vw, 80px);
+  --content-gap: clamp(16px, 1.8vw, 32px);
+  --section-gap: clamp(24px, 2.5vw, 48px);
+
+  /* === Grid system (12-column, 1920px stage) === */
+  --grid-columns: 12;
+  --grid-gutter: clamp(12px, 1.3vw, 24px);
+  --grid-margin: var(--slide-padding);
+
+  /* === Primary Brand === */
+  --uog-blue: #011451;
+  --uog-blue-rgb: 1, 20, 81;
+
+  /* === Theme: Swiss Data (neutral ground) === */
+  --slide-bg: #FFFFFF;
+  --slide-bg-alt: #F5F4F2;            /* subtle warm grey */
+  --text-primary: #1A1C20;
+  --text-secondary: #4A4D54;
+  --text-muted: #8B8E96;
+  --border-color: rgba(0, 0, 0, 0.10);
+  --divider-color: rgba(0, 0, 0, 0.06);
+
+  /* === Accent colours (minimal — University Blue is the anchor) === */
+  --accent: #011451;                   /* University Blue as singular accent */
+  --accent-rgb: 1, 20, 81;
+  --accent-warm: #7D2239;              /* UoG Dark Red — for significant data points */
+  --accent-warm-rgb: 125, 34, 57;
+  --accent-cool: #005398;              /* UoG Dark Blue — secondary series */
+  --accent-cool-rgb: 0, 83, 152;
+  --highlight: #F2D25C;               /* UoG Light Yellow — callout only */
+  --highlight-rgb: 242, 210, 92;
+
+  /* === Data palette (ordered categorical) === */
+  --data-1: #011451;                  /* University Blue — primary series */
+  --data-2: #005398;                  /* Dark Blue */
+  --data-3: #405D18;                  /* Dark Green */
+  --data-4: #7D2239;                  /* Dark Red */
+  --data-5: #4C2683;                  /* Dark Purple */
+  --data-6: #A60367;                  /* Dark Pink */
+  --data-7: #4DBBC6;                  /* Light Blue */
+  --data-8: #81C071;                  /* Light Green */
+  --data-9: #F2D25C;                  /* Light Yellow */
+  --data-10: #E98BAF;                 /* Light Pink */
+
+  /* === Positive / Negative / Neutral indicators === */
+  --positive: #405D18;                /* UoG Dark Green */
+  --negative: #7D2239;                /* UoG Dark Red */
+  --neutral: #8B8E96;
+
+  /* === Table styles === */
+  --table-header-bg: rgba(1, 20, 81, 0.06);
+  --table-stripe-bg: rgba(1, 20, 81, 0.02);
+  --table-border: rgba(0, 0, 0, 0.08);
+
+  /* === Decorative === */
+  --brand-stripe-color: var(--uog-blue);
+  --brand-stripe-width: 2px;           /* thinner for Swiss minimalism */
+  --logo-max-height: 42px;
+  --footer-logo-max-height: 28px;
+
+  /* === Shadows (very restrained) === */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.06);
+  --shadow-lg: none;                   /* no heavy shadows in data mode */
+
+  /* === Component Tokens === */
+  --card-bg: #FFFFFF;
+  --card-border: rgba(0, 0, 0, 0.08);
+  --callout-bg: #F5F4F2;
+  --code-bg: rgba(0, 0, 0, 0.03);
+  --partner-logo-max-height: 60px;
+
+  /* === Animation timing (fast, functional) === */
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --duration-fast: 150ms;
+  --duration-normal: 300ms;
+  --duration-slow: 500ms;
+
+  /* === Border radius (near-zero for Swiss precision) === */
+  --radius-sm: 0px;
+  --radius-md: 2px;
+  --radius-lg: 4px;
+}
+
+/* ==========================================================================
+   Theme-Specific Slide Type Overrides — Swiss Data
+   Minimal, precise, no shadows, near-zero radius.
+   ========================================================================== */
+
+/* Cover — White with University Blue stripe */
+.slide.title-slide {
+  background: #FFFFFF;
+  color: var(--uog-blue);
+  border-bottom: var(--brand-stripe-width) solid var(--brand-stripe-color);
+}
+
+/* Section Divider */
+.slide.section-divider {
+  background: var(--uog-blue);
+  color: #FFFFFF;
+}
+
+/* Research Question — Thin precise accent */
+.slide.research-question .question-block {
+  border-left-width: 2px;
+  border-left-color: var(--accent, var(--uog-blue));
+}
+
+/* Problem Framing — Clean divider */
+.slide.problem-framing .problem-statement {
+  border-right-color: var(--border-color);
+}
+
+/* System Architecture — Minimal cards, no shadows */
+.slide.system-architecture .arch-card {
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  box-shadow: none;
+}
+
+/* Pipeline / DAG — UoG Blue, near-zero radius */
+.slide.pipeline-dag .pipeline-node {
+  background: var(--uog-blue);
+  color: #FFFFFF;
+  border-radius: var(--radius-sm);
+}
+
+.slide.pipeline-dag .pipeline-arrow {
+  background: var(--uog-blue);
+}
+
+.slide.pipeline-dag .pipeline-arrow::after {
+  border-left-color: var(--uog-blue);
+}
+
+/* Method / Algorithm — Clean numbered circles */
+.slide.method-algorithm .method-step::before {
+  background: var(--uog-blue);
+  color: #FFFFFF;
+  border-radius: var(--radius-sm);
+}
+
+.slide.method-algorithm pre,
+.slide.method-algorithm code {
+  border-radius: 0;
+  background: var(--code-bg);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+}
+
+/* Benchmark KPI — University Blue, no effects */
+.slide.benchmark-kpi .kpi-hero {
+  border-color: var(--uog-blue);
+  border-radius: var(--radius-sm);
+  background: rgba(1, 20, 81, 0.02);
+}
+
+.slide.benchmark-kpi .kpi-value {
+  color: var(--uog-blue);
+}
+
+/* Comparison — Winner gets subtle blue border */
+.slide.comparison-ablation .compare-panel.winner {
+  border: 2px solid var(--uog-blue);
+  background: rgba(1, 20, 81, 0.02);
+  border-radius: var(--radius-sm);
+}
+
+/* Timeline — Blue markers, thin connector */
+.slide.timeline-roadmap .timeline {
+  border-left-width: 1px;
+  border-left-color: var(--uog-blue);
+}
+
+.slide.timeline-roadmap .event-marker {
+  background: var(--uog-blue);
+  color: #FFFFFF;
+  border-radius: var(--radius-sm);
+}
+
+/* Limitation / Risk — Minimal severity indicators */
+.slide.limitation-risk .risk-cell.critical {
+  border-left-color: var(--negative, #7D2239);
+}
+
+.slide.limitation-risk .risk-cell.high {
+  border-left-color: var(--highlight, #F2D25C);
+}
+
+/* Closing — White with blue stripe */
+.slide.closing-takeaway {
+  background: #FFFFFF;
+  color: var(--uog-blue);
+  border-bottom: var(--brand-stripe-width) solid var(--uog-blue);
+}
+
+.slide.closing-takeaway .takeaway-list li::before {
+  color: var(--accent);
+}
+
+/* Appendix — Clean collapsed table */
+.slide.appendix-table thead th {
+  color: var(--uog-blue);
+  border-bottom-color: var(--uog-blue);
+}
+
+/* Architecture layers — Blue accent, no radius */
+.arch-layer.layer-highlight {
+  border-left-color: var(--uog-blue);
+  border-radius: 0;
+}
+
+/* Print Overrides */
+@media print {
+  .slide {
+    background: #FFFFFF !important;
+    color: #000 !important;
+  }
+
+  .slide .kpi-value {
+    color: #000 !important;
+  }
+}

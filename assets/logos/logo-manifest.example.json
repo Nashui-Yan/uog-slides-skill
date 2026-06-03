@@ -1,0 +1,91 @@
+{
+  "version": "1.0.0",
+  "logos": {
+    "uog-primary": {
+      "name": "University of Glasgow",
+      "source": "https://www.gla.ac.uk/myglasgow/staff/brandtoolkit/logos/",
+      "variants": {
+        "light": {
+          "file": "uog-primary-light.svg",
+          "format": "svg",
+          "width": 300,
+          "height": 80,
+          "description": "Full-colour UoG logo for light/white backgrounds"
+        },
+        "dark": {
+          "file": "uog-primary-dark.svg",
+          "format": "svg",
+          "width": 300,
+          "height": 80,
+          "description": "White/reversed UoG logo for dark backgrounds"
+        },
+        "mono": {
+          "file": "uog-primary-mono.svg",
+          "format": "svg",
+          "width": 300,
+          "height": 80,
+          "description": "Monochrome UoG logo for print and single-colour applications"
+        }
+      },
+      "clearspace": "50% of logo height on all sides",
+      "minDisplayHeight": 30
+    },
+    "uog-school": {
+      "name": "PLACEHOLDER — School of Engineering",
+      "source": "https://www.gla.ac.uk/schools/engineering/",
+      "variants": {
+        "light": {
+          "file": "uog-school-light.svg",
+          "format": "svg",
+          "width": 250,
+          "height": 60,
+          "description": "School logo for light backgrounds"
+        },
+        "dark": {
+          "file": "uog-school-dark.svg",
+          "format": "svg",
+          "width": 250,
+          "height": 60,
+          "description": "School logo for dark backgrounds"
+        }
+      }
+    },
+    "project": {
+      "name": "PLACEHOLDER — Research Project",
+      "variants": {
+        "light": {
+          "file": "project-logo.svg",
+          "format": "svg",
+          "width": 200,
+          "height": 50
+        },
+        "dark": {
+          "file": "project-logo-dark.svg",
+          "format": "svg",
+          "width": 200,
+          "height": 50
+        }
+      }
+    },
+    "partners": []
+  },
+  "placement": {
+    "titleSlide": {
+      "logos": ["uog-primary", "uog-school", "project"],
+      "position": "bottom-bar"
+    },
+    "contentSlide": {
+      "logos": ["uog-primary"],
+      "position": "bottom-right"
+    },
+    "sectionDivider": {
+      "logos": ["uog-primary"],
+      "position": "bottom-center"
+    },
+    "partnerRow": {
+      "maxLogosPerRow": 5,
+      "equalHeight": true,
+      "maxLogoHeight": 60
+    }
+  }
+}

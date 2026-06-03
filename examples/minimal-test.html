@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Minimal Test Deck — nashui-uog-slides-skill</title>
+  <style>
+    /* ===================================================================
+       Inline viewport-base.css + uog-research-blue theme (minimal)
+       In production, these would be linked via <link> or @import
+       =================================================================== */
+
+    :root {
+      --uog-blue: #011451;
+      --font-display: Georgia, 'Times New Roman', serif;
+      --font-body: system-ui, -apple-system, 'Segoe UI', sans-serif;
+      --slide-padding: 80px;
+      --duration-normal: 400ms;
+      --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+      --stage-bg: #000;
+      --text-on-dark: #FFFFFF;
+    }
+
+    html, body {
+      width: 100%; height: 100%; margin: 0; padding: 0;
+      overflow: hidden; background: var(--stage-bg);
+    }
+
+    .deck-viewport {
+      position: fixed; inset: 0; overflow: hidden;
+      background: var(--stage-bg);
+    }
+
+    .deck-stage {
+      position: absolute; left: 0; top: 0;
+      width: 1920px; height: 1080px; overflow: hidden;
+      transform-origin: 0 0;
+    }
+
+    .slide {
+      position: absolute; inset: 0;
+      width: 1920px; height: 1080px;
+      display: block;
+      visibility: hidden; opacity: 0; pointer-events: none;
+      transition: visibility 0s 0.5s, opacity var(--duration-normal) var(--ease-in-out);
+    }
+
+    .slide.active {
+      visibility: visible; opacity: 1; pointer-events: auto;
+      transition: visibility 0s 0s, opacity var(--duration-normal) var(--ease-in-out);
+      z-index: 1;
+    }
+
+    .slide-content {
+      display: flex; flex-direction: column;
+      width: 100%; height: 100%;
+      padding: var(--slide-padding); box-sizing: border-box;
+    }
+
+    /* === Theme: Research Blue (minimal) === */
+    .slide[data-background="light"] {
+      background: #FAFAF8; color: var(--uog-blue);
+    }
+
+    .slide[data-background="dark"] {
+      background: var(--uog-blue); color: #FFFFFF;
+    }
+
+    .slide.layout-cover h1 {
+      font-family: var(--font-display);
+      font-size: 72px; margin: 0 0 20px;
+    }
+
+    .slide.layout-cover .subtitle {
+      font-family: var(--font-body);
+      font-size: 28px; opacity: 0.8; margin: 0;
+    }
+
+    .slide.layout-cover {
+      display: grid; align-content: center; justify-items: start;
+    }
+
+    .logo-bar {
+      position: absolute; bottom: 48px; left: 80px; right: 80px;
+      display: flex; align-items: center; gap: 24px;
+      font-family: var(--font-body); font-size: 18px;
+      color: inherit; opacity: 0.7;
+    }
+
+    .logo-placeholder {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 8px 16px;
+      border: 1px dashed currentColor;
+      border-radius: 4px;
+      font-size: 14px;
+      opacity: 0.5;
+    }
+
+    .slide.layout-close {
+      display: grid; align-content: center; justify-items: start;
+    }
+
+    /* === Controls === */
+    .deck-controls {
+      position: fixed; left: 50%; bottom: 22px;
+      transform: translateX(-50%); z-index: 1000;
+      display: flex; align-items: center; gap: 12px;
+      padding: 6px 16px;
+      background: rgba(0, 0, 0, 0.5);
+      color: var(--text-on-dark); border-radius: 999px;
+      font-size: 13px; font-family: var(--font-body);
+      backdrop-filter: blur(8px);
+      user-select: none; pointer-events: none;
+    }
+
+    /* === Print === */
+    @media print {
+      html, body { overflow: visible; background: #fff; }
+      .deck-viewport { position: static; overflow: visible; }
+      .deck-stage { position: static; width: auto; height: auto; transform: none !important; }
+      .slide {
+        position: relative; width: 1920px; height: 1080px;
+        visibility: visible; opacity: 1; pointer-events: auto;
+        break-after: page;
+      }
+      .slide:last-child { break-after: avoid; }
+      .deck-controls { display: none; }
+    }
+
+    /* === Reduced Motion === */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.2s !important;
+      }
+      .slide { transition: none; }
+      .slide.active { transition: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="deck-viewport">
+    <div class="deck-stage" id="deck-stage">
+
+      <!-- Slide 0: Title -->
+      <section class="slide layout-cover active" data-slide-index="0" data-background="dark">
+        <div class="slide-content">
+          <h1>Minimal Test Deck</h1>
+          <p class="subtitle">nashui-uog-slides-skill validation target</p>
+          <div class="logo-bar">
+            <span class="logo-placeholder">[UoG Logo]</span>
+            <span class="logo-placeholder">[School Logo]</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 1: Content -->
+      <section class="slide" data-slide-index="1" data-background="light">
+        <div class="slide-content">
+          <h2>Slide Two — Content</h2>
+          <p>This is a content slide with University Blue (#011451) text on a light background.</p>
+          <ul>
+            <li>The viewport model uses a fixed 1920×1080 stage</li>
+            <li>Navigation is handled by inline JavaScript</li>
+            <li>Print and reduced-motion CSS are included</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- Slide 2: Content -->
+      <section class="slide" data-slide-index="2" data-background="light">
+        <div class="slide-content">
+          <h2>Slide Three — Validation Target</h2>
+          <p>This deck is designed to pass all P0 checks in <code>validate-deck.mjs</code>:</p>
+          <ul>
+            <li>✅ .deck-viewport present</li>
+            <li>✅ .deck-stage present</li>
+            <li>✅ .slide elements present</li>
+            <li>✅ Navigation script present</li>
+            <li>✅ Print CSS present</li>
+            <li>✅ Reduced motion CSS present</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- Slide 3: Close -->
+      <section class="slide layout-close" data-slide-index="3" data-background="dark">
+        <div class="slide-content">
+          <h2>Thank You</h2>
+          <p class="subtitle">Minimal test deck complete</p>
+          <div class="logo-bar">
+            <span class="logo-placeholder">[UoG Logo]</span>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+  <div class="deck-controls">
+    <span class="slide-count">1 / 4</span>
+    <span class="shortcut-hint">&#8592; &#8594; to navigate</span>
+  </div>
+
+  <script>
+    /* ===================================================================
+       Navigation Script (minimal)
+       =================================================================== */
+    (function() {
+      const stage = document.getElementById('deck-stage');
+      const slides = Array.from(document.querySelectorAll('.slide'));
+      const counter = document.querySelector('.slide-count');
+      let currentIndex = 0;
+
+      function resize() {
+        const scale = Math.min(
+          window.innerWidth / 1920,
+          window.innerHeight / 1080
+        );
+        const x = (window.innerWidth - 1920 * scale) / 2;
+        const y = (window.innerHeight - 1080 * scale) / 2;
+        stage.style.transform = `translate(${x}px, ${y}px) scale(${scale})`;
+      }
+
+      function goto(index) {
+        if (index < 0 || index >= slides.length) return;
+        slides[currentIndex].classList.remove('active');
+        slides[index].classList.add('active');
+        currentIndex = index;
+        counter.textContent = `${currentIndex + 1} / ${slides.length}`;
+        history.replaceState(null, '', `#${currentIndex + 1}`);
+      }
+
+      function next() { goto(currentIndex + 1); }
+      function prev() { goto(currentIndex - 1); }
+
+      // Keyboard
+      document.addEventListener('keydown', function(e) {
+        switch (e.key) {
+          case 'ArrowRight': case 'ArrowDown': case ' ': case 'PageDown':
+            e.preventDefault(); next(); break;
+          case 'ArrowLeft': case 'ArrowUp': case 'PageUp':
+            e.preventDefault(); prev(); break;
+          case 'Home': e.preventDefault(); goto(0); break;
+          case 'End': e.preventDefault(); goto(slides.length - 1); break;
+        }
+      });
+
+      // Mouse wheel
+      let wheelTimeout;
+      document.addEventListener('wheel', function(e) {
+        if (wheelTimeout) return;
+        wheelTimeout = setTimeout(function() { wheelTimeout = null; }, 300);
+        if (e.deltaY > 0) next();
+        else if (e.deltaY < 0) prev();
+      }, { passive: false });
+
+      // Touch
+      let touchStartX = 0;
+      document.addEventListener('touchstart', function(e) {
+        touchStartX = e.touches[0].clientX;
+      });
+      document.addEventListener('touchend', function(e) {
+        const diff = e.changedTouches[0].clientX - touchStartX;
+        if (Math.abs(diff) > 50) {
+          if (diff < 0) next();
+          else prev();
+        }
+      });
+
+      // Click
+      document.addEventListener('click', function(e) {
+        const rect = stage.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const w = rect.width;
+        if (x < w * 0.3) prev();
+        else if (x > w * 0.7) next();
+        else next();  // middle click → advance
+      });
+
+      // Hash routing
+      function fromHash() {
+        const hash = parseInt(window.location.hash.slice(1), 10);
+        if (hash >= 1 && hash <= slides.length) goto(hash - 1);
+      }
+      window.addEventListener('hashchange', fromHash);
+
+      resize();
+      window.addEventListener('resize', resize);
+      fromHash();
+    })();
+  </script>
+</body>
+</html>

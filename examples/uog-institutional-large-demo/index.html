@@ -1,0 +1,952 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>World-changing Research — UoG Institutional Demo</title>
+<style>
+/* ========================================================================
+   INLINE CSS — viewport-base + header system + layouts + theme
+   All original work. No AGPL-3.0 code incorporated.
+   ======================================================================== */
+
+/* === Theme Tokens (uog-research-blue) === */
+:root {
+  --uog-blue: #011451;
+  --uog-blue-rgb: 1, 20, 81;
+  --font-display: Georgia, 'Times New Roman', serif;
+  --font-body: system-ui, -apple-system, 'Segoe UI', 'Helvetica Neue', sans-serif;
+  --font-mono: 'SF Mono', 'Cascadia Code', 'Consolas', monospace;
+
+  --title-size:       clamp(60px, 3.5vw, 76px);
+  --subtitle-size:    clamp(28px, 1.7vw, 36px);
+  --bullet-size:      clamp(38px, 2.3vw, 52px);
+  --supporting-size:  clamp(30px, 1.8vw, 40px);
+  --caption-size:     clamp(24px, 1.4vw, 30px);
+  --footer-size:      clamp(20px, 1.2vw, 26px);
+  --h2-size:          clamp(48px, 2.8vw, 64px);
+  --h3-size:          clamp(36px, 2.1vw, 48px);
+  --small-size:       clamp(18px, 1vw, 24px);
+  --body-size:        clamp(30px, 1.8vw, 40px);
+
+  /* Cover sizes */
+  --cover-title-size:    clamp(76px, 4.4vw, 96px);
+  --cover-subtitle-size: clamp(32px, 1.9vw, 40px);
+  --cover-meta-size:     clamp(26px, 1.5vw, 32px);
+
+  --slide-padding: 80px;
+  --content-gap: clamp(20px, 2.2vw, 40px);
+  --section-gap: clamp(32px, 3.3vw, 64px);
+
+  --slide-bg: #FAFAF8;
+  --slide-bg-alt: #F0EEE8;
+  --text-primary: #011451;
+  --text-secondary: #3A3D42;
+  --text-muted: #6B6E74;
+  --border-color: rgba(1, 20, 81, 0.12);
+  --divider-color: rgba(1, 20, 81, 0.08);
+
+  --accent: #005398;
+  --accent-rgb: 0, 83, 152;
+  --highlight: #F2D25C;
+
+  --brand-stripe-color: var(--uog-blue);
+  --brand-stripe-width: 6px;
+
+  /* Header geometry (1920px stage) */
+  --header-top: 64px;
+  --header-left: 80px;
+  --header-height: 200px;
+  --header-logo-width: 320px;
+  --header-logo-max-height: 150px;
+  --header-gap: 56px;
+  --body-top: 296px;
+
+  /* Cover geometry */
+  --cover-lockup-left: 96px;
+
+  --shadow-sm: 0 1px 3px rgba(1, 20, 81, 0.08);
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --duration-normal: 400ms;
+
+  --radius-sm: 2px;
+  --radius-md: 4px;
+  --radius-lg: 8px;
+
+  --stage-bg: #000;
+  --text-on-dark: #FFFFFF;
+  --positive: #405D18;
+  --negative: #7D2239;
+  --neutral: #8B8E96;
+}
+
+/* === Viewport Base === */
+html, body { width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden; background: var(--stage-bg); }
+.deck-viewport { position: fixed; inset: 0; overflow: hidden; background: var(--stage-bg); }
+.deck-stage {
+  position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; overflow: hidden;
+  transform-origin: 0 0;
+  transition: transform var(--duration-normal) var(--ease-out-expo);
+}
+.slide {
+  position: absolute; inset: 0; width: 1920px; height: 1080px; display: block;
+  visibility: hidden; opacity: 0; pointer-events: none;
+  transition: visibility 0s 0.5s, opacity var(--duration-normal) var(--ease-out-expo);
+  background: var(--slide-bg); color: var(--text-primary);
+  -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
+}
+.slide.active {
+  visibility: visible; opacity: 1; pointer-events: auto;
+  transition: visibility 0s 0s, opacity var(--duration-normal) var(--ease-out-expo);
+  z-index: 1;
+}
+.slide img, .slide video, .slide canvas { max-width: 100%; max-height: 100%; display: block; }
+.uog-header-logo--on-blue-block { max-width: none; max-height: none; height: auto; }
+.slide :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.slide *, .slide *::before, .slide *::after { box-sizing: border-box; }
+
+/* === Deck Controls === */
+.deck-controls {
+  position: fixed; left: 50%; bottom: 22px; transform: translateX(-50%); z-index: 1000;
+  display: flex; align-items: center; gap: 12px; padding: 6px 16px;
+  background: rgba(0,0,0,0.5); color: #fff; border-radius: 999px;
+  font-size: 13px; font-family: var(--font-body);
+  backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+  user-select: none; pointer-events: none;
+}
+.deck-controls .slide-count { font-variant-numeric: tabular-nums; letter-spacing: 0.02em; }
+.deck-controls .shortcut-hint { opacity: 0.6; font-size: 11px; }
+
+/* === Print === */
+@page { size: 1920px 1080px; margin: 0; }
+@media print {
+  * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  html, body { overflow: visible; background: #fff; }
+  .deck-viewport { position: static; overflow: visible; }
+  .deck-stage { position: static; width: auto; height: auto; transform: none !important; }
+  .slide {
+    position: relative; width: 1920px; height: 1080px;
+    visibility: visible; opacity: 1; pointer-events: auto;
+    break-after: page; background: #fff !important; color: #000 !important;
+  }
+  .slide:last-child { break-after: avoid; }
+  .slide.title-slide, .slide.title-slide *,
+  .slide.closing-takeaway, .slide.closing-takeaway *,
+  .slide.section-divider, .slide.section-divider * {
+    background: #fff !important; color: #011451 !important;
+  }
+  .deck-controls { display: none; }
+}
+
+/* === Reduced Motion === */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.2s !important; }
+  .slide, .slide.active { transition: none; }
+}
+
+/* ========================================================================
+   UOG SLIDE HEADER SYSTEM
+   Every normal light slide uses this fixed header.
+   ======================================================================== */
+
+.uog-slide-header {
+  position: absolute;
+  top: 44px;
+  left: 0;
+  right: 96px;
+  height: 200px;
+  display: grid;
+  grid-template-columns: 340px 1fr;
+  gap: 24px;
+  align-items: start;
+}
+
+/* Logo anchor */
+.uog-logo-anchor {
+  position: relative;
+  width: 340px;
+  height: 150px;
+}
+
+/* Blue brand block — flush with slide left edge */
+.uog-logo-blue-block {
+  width: 340px;
+  height: 150px;
+  background: var(--uog-blue, #011451);
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+}
+
+/*
+ * White-text logo inside blue block.
+ * Derived cropped SVG (bbox-based). Centered by parent grid.
+ */
+.uog-header-logo--on-blue-block {
+  display: block;
+  width: 285px;
+  height: auto;
+  max-height: 110px;
+  object-fit: contain;
+  position: static;
+  left: auto;
+  top: auto;
+  transform: none;
+}
+
+.uog-header-text {
+  display: grid;
+  gap: 8px;
+  align-content: start;
+  padding-top: 10px;
+}
+
+.uog-slide-title {
+  font-family: var(--font-display);
+  font-size: var(--title-size);
+  font-weight: 700;
+  color: var(--uog-blue);
+  margin: 0;
+  line-height: 1.1;
+}
+
+.uog-slide-subtitle {
+  font-family: var(--font-body);
+  font-size: var(--subtitle-size);
+  color: var(--text-secondary);
+  margin: 0;
+  line-height: 1.3;
+}
+
+/* Body starts below the fixed header */
+.uog-slide-body {
+  position: absolute;
+  top: var(--body-top, 296px);
+  left: var(--slide-padding, 80px);
+  right: var(--slide-padding, 80px);
+  bottom: var(--slide-padding, 80px);
+}
+
+/* ========================================================================
+   COVER SLIDE
+   White background, full-width University Blue band behind title text,
+   bottom-left logo row with blue-text logo.
+   ======================================================================== */
+
+.slide.title-slide {
+  background: #FFFFFF;
+  color: var(--uog-blue);
+}
+
+/* Full-width University Blue band behind the cover text */
+.uog-cover-band {
+  position: absolute;
+  left: 0;
+  top: 180px;
+  width: 100%;
+  height: 420px;
+  background: var(--uog-blue, #011451);
+  display: flex;
+  align-items: center;
+}
+
+/* Author / institution below the blue band on white background */
+.uog-cover-author-block {
+  position: absolute;
+  left: 96px;
+  top: 640px;
+  color: var(--uog-blue);
+}
+
+.uog-cover-author {
+  font-family: var(--font-body);
+  font-size: clamp(24px, 1.5vw, 32px);
+  font-weight: 700;
+  color: var(--uog-blue);
+  margin: 0 0 10px 0;
+}
+
+.uog-cover-institution {
+  font-family: var(--font-body);
+  font-size: clamp(20px, 1.2vw, 28px);
+  color: var(--uog-blue);
+  margin: 0;
+}
+
+/* Cover text inside the blue band */
+.uog-cover-text {
+  padding-left: 96px;
+  padding-right: 96px;
+  max-width: 1300px;
+}
+
+.uog-cover-text h1 {
+  font-family: var(--font-display);
+  font-size: var(--cover-title-size);
+  font-weight: 800;
+  color: #FFFFFF;
+  margin: 0 0 18px 0;
+  line-height: 1.1;
+  text-wrap: balance;
+}
+
+.uog-cover-text .subtitle {
+  font-family: var(--font-body);
+  font-size: var(--cover-subtitle-size);
+  color: #FFFFFF;
+  opacity: 0.85;
+  margin: 0 0 16px 0;
+}
+
+.uog-cover-text .meta {
+  font-family: var(--font-body);
+  font-size: var(--cover-meta-size);
+  color: #FFFFFF;
+  opacity: 0.6;
+  margin: 0;
+}
+
+/* Bottom-left logo row — blue-text logo on white background */
+.uog-cover-logo-row {
+  position: absolute;
+  left: 96px;
+  bottom: 78px;
+  display: flex;
+  align-items: flex-end;
+  gap: 40px;
+}
+
+.uog-cover-footer-logo {
+  width: 290px;
+  height: auto;
+  object-fit: contain;
+  object-position: left bottom;
+}
+
+.uog-partner-logo-placeholder {
+  width: 160px;
+  height: 70px;
+  border: 1px dashed rgba(1, 20, 81, 0.2);
+  border-radius: var(--radius-sm);
+  display: grid;
+  place-content: center;
+  font-family: var(--font-body);
+  font-size: var(--small-size);
+  color: rgba(1, 20, 81, 0.25);
+}
+
+/* ========================================================================
+   CLOSING SLIDE
+   White background, full-width University Blue band, bottom-left logo row.
+   Matches cover slide system.
+   ======================================================================== */
+
+.slide.closing-takeaway {
+  background: #FFFFFF;
+  color: var(--uog-blue);
+}
+
+/* Full-width blue band behind closing text */
+.uog-closing-band {
+  position: absolute;
+  left: 0;
+  top: 240px;
+  width: 100%;
+  height: 400px;
+  background: var(--uog-blue, #011451);
+  display: flex;
+  align-items: center;
+}
+
+/* Closing text inside blue band */
+.uog-closing-text {
+  padding-left: 96px;
+  padding-right: 96px;
+  max-width: 1300px;
+}
+
+.uog-closing-title {
+  font-family: var(--font-display);
+  font-size: clamp(76px, 4.8vw, 104px);
+  font-weight: 800;
+  line-height: 1.05;
+  color: #FFFFFF;
+  margin: 0 0 22px 0;
+}
+
+.uog-closing-subtitle {
+  font-family: var(--font-body);
+  font-size: clamp(32px, 2vw, 42px);
+  line-height: 1.25;
+  color: #FFFFFF;
+  margin: 0 0 18px 0;
+}
+
+.uog-closing-meta {
+  font-family: var(--font-body);
+  font-size: clamp(24px, 1.4vw, 30px);
+  color: rgba(255, 255, 255, 0.82);
+  margin: 0;
+}
+
+/* ========================================================================
+   LAYOUT: BIG BULLETS
+   ======================================================================== */
+
+.uog-layout-big-bullets ul {
+  font-family: var(--font-body);
+  font-size: var(--bullet-size);
+  font-weight: 500;
+  line-height: 1.35;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 20px;
+}
+.uog-layout-big-bullets ul li::before { content: "— "; color: var(--accent); }
+
+/* === Table of Contents — structured agenda rows === */
+.uog-agenda-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  width: min(1320px, 100%);
+}
+.uog-agenda-list li {
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  align-items: center;
+  min-height: 82px;
+  border-top: 2px solid rgba(1, 20, 81, 0.18);
+  color: var(--uog-blue);
+}
+.uog-agenda-list li:last-child {
+  border-bottom: 2px solid rgba(1, 20, 81, 0.18);
+}
+.uog-agenda-number {
+  font-family: var(--font-mono);
+  font-size: clamp(30px, 1.8vw, 42px);
+  font-weight: 800;
+  color: var(--accent);
+  letter-spacing: 0.04em;
+}
+.uog-agenda-text {
+  font-family: var(--font-body);
+  font-size: clamp(34px, 2vw, 48px);
+  font-weight: 500;
+  line-height: 1.15;
+  color: var(--uog-blue);
+}
+
+/* ========================================================================
+   LAYOUT: TWO-COLUMN
+   ======================================================================== */
+
+.uog-layout-two-column .two-col-body {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--section-gap);
+  align-items: start;
+  height: 100%;
+}
+.uog-layout-two-column .col-text {
+  font-family: var(--font-body);
+  font-size: var(--bullet-size);
+  line-height: 1.35;
+  display: grid;
+  gap: 12px;
+  align-content: start;
+}
+.uog-layout-two-column .col-text ul {
+  list-style: none; padding: 0; margin: 0; display: grid; gap: 14px;
+}
+.uog-layout-two-column .col-text ul li::before { content: "— "; color: var(--accent); }
+.uog-layout-two-column .col-visual {
+  display: grid; place-content: center;
+  min-height: 500px; height: 100%;
+  border: 1px solid var(--border-color); border-radius: var(--radius-md);
+  background: var(--slide-bg-alt);
+  color: var(--text-muted); font-size: var(--caption-size);
+}
+
+.visual-placeholder {
+  display: grid; place-content: center; text-align: center;
+  min-height: 500px; height: 100%;
+  border: 2px dashed var(--border-color); border-radius: var(--radius-md);
+  background: var(--slide-bg-alt);
+  color: var(--text-muted);
+  font-family: var(--font-body); font-size: var(--caption-size); gap: 8px;
+}
+.visual-placeholder .ph-icon { font-size: 64px; opacity: 0.3; }
+.visual-placeholder .ph-label { font-size: var(--supporting-size); opacity: 0.5; }
+
+/* ========================================================================
+   LAYOUT: IMAGE-CARD GRID
+   ======================================================================== */
+
+.uog-layout-image-card-grid .image-card-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--section-gap);
+  height: 100%;
+  align-content: start;
+}
+.uog-layout-image-card-grid .image-card {
+  display: grid;
+  grid-template-rows: 1fr auto;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+}
+.uog-layout-image-card-grid .image-card .card-image {
+  width: 100%; aspect-ratio: 16/9; object-fit: cover; display: block;
+  background: var(--slide-bg-alt);
+}
+.uog-layout-image-card-grid .image-card .card-caption {
+  background: var(--uog-blue);
+  color: #fff;
+  font-family: var(--font-body); font-size: var(--caption-size);
+  font-weight: 600; text-align: center;
+  padding: 16px 12px; line-height: 1.2;
+}
+.card-image-placeholder {
+  width: 100%; aspect-ratio: 16/9;
+  display: grid; place-content: center;
+  background: var(--slide-bg-alt);
+  color: var(--text-muted);
+  font-family: var(--font-body); font-size: var(--h3-size); opacity: 0.4;
+}
+
+/* ========================================================================
+   LAYOUT: KPI
+   ======================================================================== */
+
+.uog-layout-kpi .kpi-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--section-gap);
+  height: 100%;
+  align-content: start;
+}
+.uog-layout-kpi .metric {
+  display: grid; gap: 8px; text-align: center; align-content: center;
+  padding: var(--section-gap);
+  border: 1px solid var(--border-color); border-radius: var(--radius-md);
+  background: #FFFFFF;
+}
+.uog-layout-kpi .kpi-value {
+  font-family: var(--font-mono);
+  font-size: clamp(72px, 5vw, 140px); font-weight: 700;
+  color: var(--uog-blue); line-height: 1;
+}
+.uog-layout-kpi .kpi-label {
+  font-family: var(--font-body);
+  font-size: var(--caption-size); color: var(--text-muted);
+  text-transform: uppercase; letter-spacing: 0.08em; font-weight: 600;
+}
+
+/* ========================================================================
+   LAYOUT: COMPARISON
+   ======================================================================== */
+
+.uog-layout-comparison .compare-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--section-gap);
+  align-items: start;
+  height: 100%;
+}
+.uog-layout-comparison .compare-panel {
+  display: grid; gap: var(--content-gap); align-content: start;
+  padding: var(--content-gap);
+  border: 1px solid var(--border-color); border-radius: var(--radius-md);
+  background: #FFFFFF;
+}
+.uog-layout-comparison .compare-panel h3 {
+  font-family: var(--font-body);
+  font-size: var(--h3-size); font-weight: 600; margin: 0;
+  padding-bottom: 8px; border-bottom: 2px solid var(--divider-color);
+  color: var(--uog-blue);
+}
+.uog-layout-comparison .compare-panel ul {
+  font-family: var(--font-body);
+  font-size: var(--supporting-size); line-height: 1.45;
+  list-style: none; padding: 0; margin: 0; display: grid; gap: 12px;
+}
+.uog-layout-comparison .compare-panel ul li::before { content: "→ "; color: var(--accent); }
+
+/* ========================================================================
+   ANIMATIONS (scoped to no-preference)
+   ======================================================================== */
+@media (prefers-reduced-motion: no-preference) {
+  .reveal {
+    opacity: 0; transform: translateY(20px);
+    transition: opacity var(--duration-normal) var(--ease-out-expo),
+                transform var(--duration-normal) var(--ease-out-expo);
+  }
+  .slide.active .reveal {
+    opacity: 1; transform: translateY(0);
+  }
+  .reveal-scale {
+    opacity: 0; transform: scale(0.9);
+    transition: opacity 500ms var(--ease-out-expo),
+                transform 500ms var(--ease-out-expo);
+  }
+  .slide.active .reveal-scale {
+    opacity: 1; transform: scale(1);
+  }
+  .stagger-100 > .reveal:nth-child(1) { transition-delay: 0ms; }
+  .stagger-100 > .reveal:nth-child(2) { transition-delay: 100ms; }
+  .stagger-100 > .reveal:nth-child(3) { transition-delay: 200ms; }
+  .stagger-100 > .reveal:nth-child(4) { transition-delay: 300ms; }
+  .stagger-100 > .reveal:nth-child(5) { transition-delay: 400ms; }
+  .stagger-100 > .reveal:nth-child(6) { transition-delay: 500ms; }
+}
+</style>
+</head>
+<body>
+<div class="deck-viewport">
+<div class="deck-stage" id="deck-stage">
+
+<!-- ====================================================================
+     SLIDE 1 — Cover (white bg, full-width blue band, bottom-left logo row)
+     ==================================================================== -->
+<section class="slide title-slide active" data-slide-index="0" data-background="light" data-slide-type="cover">
+  <div class="uog-cover-band">
+    <div class="uog-cover-text">
+      <h1 class="reveal">World-changing Research</h1>
+      <p class="subtitle reveal">A clean institutional HTML slide template for academic presentations</p>
+      <p class="meta reveal">University of Glasgow &nbsp;|&nbsp; 2026</p>
+    </div>
+  </div>
+  <div class="uog-cover-author-block">
+    <p class="uog-cover-author">Author Name</p>
+    <p class="uog-cover-institution">School of Engineering &nbsp;|&nbsp; University of Glasgow</p>
+  </div>
+  <div class="uog-cover-logo-row">
+    <img class="uog-cover-footer-logo" src="../../assets/logos/main-uog-logo-artwork/SVG/Unboxed%20colour%20logo%20blue%20text.svg" alt="University of Glasgow">
+    <!-- Partner logos can be added here:
+    <div class="uog-partner-logo-placeholder">Partner logo</div>
+    -->
+  </div>
+</section>
+
+<!-- ====================================================================
+     SLIDE 2 — Table of Contents
+     ==================================================================== -->
+<section class="slide" data-slide-index="1" data-background="light" data-slide-type="contents">
+  <header class="uog-slide-header">
+    <div class="uog-logo-anchor">
+      <div class="uog-logo-blue-block">
+        <img class="uog-header-logo uog-header-logo--on-blue-block" src="../../assets/logos/main-uog-logo-artwork/SVG/uog-white-text-cropped-for-header.svg" alt="University of Glasgow">
+      </div>
+    </div>
+    <div class="uog-header-text">
+      <h2 class="uog-slide-title reveal">Contents</h2>
+      <p class="uog-slide-subtitle reveal">Presentation structure at a glance</p>
+    </div>
+  </header>
+  <div class="uog-slide-body">
+    <ol class="uog-agenda-list">
+      <li class="reveal">
+        <span class="uog-agenda-number">01</span>
+        <span class="uog-agenda-text">Research excellence and impact</span>
+      </li>
+      <li class="reveal">
+        <span class="uog-agenda-number">02</span>
+        <span class="uog-agenda-text">Designed for academic communication</span>
+      </li>
+      <li class="reveal">
+        <span class="uog-agenda-number">03</span>
+        <span class="uog-agenda-text">Cross-disciplinary themed areas</span>
+      </li>
+      <li class="reveal">
+        <span class="uog-agenda-number">04</span>
+        <span class="uog-agenda-text">Evidence at presentation scale</span>
+      </li>
+      <li class="reveal">
+        <span class="uog-agenda-number">05</span>
+        <span class="uog-agenda-text">From discovery to impact</span>
+      </li>
+      <li class="reveal">
+        <span class="uog-agenda-number">06</span>
+        <span class="uog-agenda-text">Clear, branded, ready to adapt</span>
+      </li>
+    </ol>
+  </div>
+</section>
+
+<!-- ====================================================================
+     SLIDE 3 — Big Bullets
+     ==================================================================== -->
+<section class="slide" data-slide-index="7" data-background="light" data-slide-type="big-bullets">
+  <header class="uog-slide-header">
+    <div class="uog-logo-anchor">
+      <div class="uog-logo-blue-block">
+        <img class="uog-header-logo uog-header-logo--on-blue-block" src="../../assets/logos/main-uog-logo-artwork/SVG/uog-white-text-cropped-for-header.svg" alt="University of Glasgow">
+      </div>
+    </div>
+    <div class="uog-header-text">
+      <h2 class="uog-slide-title reveal">Research excellence and impact</h2>
+      <p class="uog-slide-subtitle reveal">Large typography keeps the message readable in the room</p>
+    </div>
+  </header>
+  <div class="uog-slide-body uog-layout-big-bullets">
+    <ul class="stagger-100">
+      <li class="reveal">Cross-disciplinary themes</li>
+      <li class="reveal">Externally funded work</li>
+      <li class="reveal">Research with global reach</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ====================================================================
+     SLIDE 3 — Two-Column
+     ==================================================================== -->
+<section class="slide" data-slide-index="2" data-background="light" data-slide-type="two-column">
+  <header class="uog-slide-header">
+    <div class="uog-logo-anchor">
+      <div class="uog-logo-blue-block">
+        <img class="uog-header-logo uog-header-logo--on-blue-block" src="../../assets/logos/main-uog-logo-artwork/SVG/uog-white-text-cropped-for-header.svg" alt="University of Glasgow">
+      </div>
+    </div>
+    <div class="uog-header-text">
+      <h2 class="uog-slide-title reveal">Designed for academic communication</h2>
+      <p class="uog-slide-subtitle reveal">One clear message, one supporting visual</p>
+    </div>
+  </header>
+  <div class="uog-slide-body uog-layout-two-column">
+    <div class="two-col-body">
+      <div class="col-text reveal">
+        <ul>
+          <li>Clear typographic hierarchy for lecture halls</li>
+          <li>White space lets the content breathe</li>
+          <li>Branded with University of Glasgow identity</li>
+        </ul>
+      </div>
+      <div class="col-visual reveal">
+        <div class="visual-placeholder">
+          <span class="ph-icon">&#9638;</span>
+          <span class="ph-label">Diagram / Chart / Photo</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ====================================================================
+     SLIDE 4 — Image-Card Grid (2×3, optional pattern)
+     ==================================================================== -->
+<section class="slide" data-slide-index="3" data-background="light" data-slide-type="image-card-grid">
+  <header class="uog-slide-header">
+    <div class="uog-logo-anchor">
+      <div class="uog-logo-blue-block">
+        <img class="uog-header-logo uog-header-logo--on-blue-block" src="../../assets/logos/main-uog-logo-artwork/SVG/uog-white-text-cropped-for-header.svg" alt="University of Glasgow">
+      </div>
+    </div>
+    <div class="uog-header-text">
+      <h2 class="uog-slide-title reveal">Cross-disciplinary themed areas</h2>
+      <p class="uog-slide-subtitle reveal">Use image cards when showing programmes, teams, or themes</p>
+    </div>
+  </header>
+  <div class="uog-slide-body uog-layout-image-card-grid">
+    <div class="image-card-grid stagger-100">
+      <div class="image-card reveal">
+        <div class="card-image-placeholder">&#9733;</div>
+        <div class="card-caption">Energy Systems</div>
+      </div>
+      <div class="image-card reveal">
+        <div class="card-image-placeholder">&#9733;</div>
+        <div class="card-caption">Digital Health</div>
+      </div>
+      <div class="image-card reveal">
+        <div class="card-image-placeholder">&#9733;</div>
+        <div class="card-caption">Urban Futures</div>
+      </div>
+      <div class="image-card reveal">
+        <div class="card-image-placeholder">&#9733;</div>
+        <div class="card-caption">Quantum Tech</div>
+      </div>
+      <div class="image-card reveal">
+        <div class="card-image-placeholder">&#9733;</div>
+        <div class="card-caption">Data &amp; AI</div>
+      </div>
+      <div class="image-card reveal">
+        <div class="card-image-placeholder">&#9733;</div>
+        <div class="card-caption">Sustainability</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ====================================================================
+     SLIDE 5 — KPI
+     ==================================================================== -->
+<section class="slide" data-slide-index="4" data-background="light" data-slide-type="kpi">
+  <header class="uog-slide-header">
+    <div class="uog-logo-anchor">
+      <div class="uog-logo-blue-block">
+        <img class="uog-header-logo uog-header-logo--on-blue-block" src="../../assets/logos/main-uog-logo-artwork/SVG/uog-white-text-cropped-for-header.svg" alt="University of Glasgow">
+      </div>
+    </div>
+    <div class="uog-header-text">
+      <h2 class="uog-slide-title reveal">Evidence at presentation scale</h2>
+      <p class="uog-slide-subtitle reveal">Use big numbers instead of dense paragraphs</p>
+    </div>
+  </header>
+  <div class="uog-slide-body uog-layout-kpi">
+    <div class="kpi-row">
+      <div class="metric reveal-scale">
+        <span class="kpi-value">£180M</span>
+        <span class="kpi-label">Research Income</span>
+      </div>
+      <div class="metric reveal-scale">
+        <span class="kpi-value">4,900+</span>
+        <span class="kpi-label">Research Staff</span>
+      </div>
+      <div class="metric reveal-scale">
+        <span class="kpi-value">86%</span>
+        <span class="kpi-label">World-Leading</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ====================================================================
+     SLIDE 6 — Comparison
+     ==================================================================== -->
+<section class="slide" data-slide-index="5" data-background="light" data-slide-type="comparison">
+  <header class="uog-slide-header">
+    <div class="uog-logo-anchor">
+      <div class="uog-logo-blue-block">
+        <img class="uog-header-logo uog-header-logo--on-blue-block" src="../../assets/logos/main-uog-logo-artwork/SVG/uog-white-text-cropped-for-header.svg" alt="University of Glasgow">
+      </div>
+    </div>
+    <div class="uog-header-text">
+      <h2 class="uog-slide-title reveal">From discovery to impact</h2>
+      <p class="uog-slide-subtitle reveal">Use two-column comparison for before/after or concept/result</p>
+    </div>
+  </header>
+  <div class="uog-slide-body uog-layout-comparison">
+    <div class="compare-grid">
+      <div class="compare-panel reveal">
+        <h3>Discovery</h3>
+        <ul>
+          <li>Fundamental research questions</li>
+          <li>Novel methodologies</li>
+          <li>Peer-reviewed outputs</li>
+        </ul>
+      </div>
+      <div class="compare-panel reveal">
+        <h3>Impact</h3>
+        <ul>
+          <li>Policy and practice change</li>
+          <li>Industry partnerships</li>
+          <li>Public engagement</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ====================================================================
+     SLIDE 7 — Closing (white bg, blue band, bottom-left logo row)
+     ==================================================================== -->
+<section class="slide closing-takeaway" data-slide-index="6" data-background="light" data-slide-type="closing">
+  <div class="uog-closing-band">
+    <div class="uog-closing-text">
+      <h2 class="uog-closing-title reveal">Clear, branded, ready to adapt</h2>
+      <p class="uog-closing-subtitle reveal">Replace placeholders with your research content and export</p>
+      <p class="uog-closing-meta reveal">nashui-uog-slides-skill &nbsp;|&nbsp; University of Glasgow</p>
+    </div>
+  </div>
+  <div class="uog-cover-logo-row">
+    <img class="uog-cover-footer-logo" src="../../assets/logos/main-uog-logo-artwork/SVG/Unboxed%20colour%20logo%20blue%20text.svg" alt="University of Glasgow">
+  </div>
+</section>
+
+</div><!-- /deck-stage -->
+</div><!-- /deck-viewport -->
+
+<div class="deck-controls">
+  <span class="slide-count">1 / 8</span>
+  <span class="shortcut-hint">&#8592; &#8594; to navigate</span>
+</div>
+
+<script>
+/* ====================================================================
+   Navigation Script (original — no AGPL-3.0 code)
+   ==================================================================== */
+(function() {
+  var stage = document.getElementById('deck-stage');
+  var slides = [].slice.call(document.querySelectorAll('.slide'));
+  var counter = document.querySelector('.slide-count');
+  var currentIndex = 0;
+
+  function resize() {
+    var scale = Math.min(window.innerWidth / 1920, window.innerHeight / 1080);
+    var x = (window.innerWidth - 1920 * scale) / 2;
+    var y = (window.innerHeight - 1080 * scale) / 2;
+    stage.style.transform = 'translate(' + x + 'px, ' + y + 'px) scale(' + scale + ')';
+  }
+
+  function goto(index) {
+    if (index < 0 || index >= slides.length) return;
+    slides[currentIndex].classList.remove('active');
+    slides[index].classList.add('active');
+    currentIndex = index;
+    counter.textContent = (currentIndex + 1) + ' / ' + slides.length;
+    history.replaceState(null, '', '#' + (currentIndex + 1));
+  }
+
+  function next() { goto(currentIndex + 1); }
+  function prev() { goto(currentIndex - 1); }
+
+  document.addEventListener('keydown', function(e) {
+    switch (e.key) {
+      case 'ArrowRight': case 'ArrowDown': case ' ': case 'PageDown':
+        e.preventDefault(); next(); break;
+      case 'ArrowLeft': case 'ArrowUp': case 'PageUp':
+        e.preventDefault(); prev(); break;
+      case 'Home': e.preventDefault(); goto(0); break;
+      case 'End': e.preventDefault(); goto(slides.length - 1); break;
+    }
+  });
+
+  var wheelTimer;
+  document.addEventListener('wheel', function(e) {
+    if (wheelTimer) return;
+    wheelTimer = setTimeout(function() { wheelTimer = null; }, 300);
+    if (e.deltaY > 0) next();
+    else if (e.deltaY < 0) prev();
+  }, { passive: false });
+
+  var touchX = 0;
+  document.addEventListener('touchstart', function(e) { touchX = e.touches[0].clientX; });
+  document.addEventListener('touchend', function(e) {
+    var diff = e.changedTouches[0].clientX - touchX;
+    if (Math.abs(diff) > 50) { if (diff < 0) next(); else prev(); }
+  });
+
+  document.addEventListener('click', function(e) {
+    var rect = stage.getBoundingClientRect();
+    var x = e.clientX - rect.left;
+    if (x < rect.width * 0.3) prev();
+    else if (x > rect.width * 0.7) next();
+    else next();
+  });
+
+  function fromHash() {
+    var hash = parseInt(window.location.hash.slice(1), 10);
+    if (hash >= 1 && hash <= slides.length) goto(hash - 1);
+  }
+  window.addEventListener('hashchange', fromHash);
+
+  resize();
+  window.addEventListener('resize', resize);
+  fromHash();
+})();
+</script>
+</body>
+</html>

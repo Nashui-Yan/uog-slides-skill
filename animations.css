@@ -1,0 +1,266 @@
+/* ==========================================================================
+   animations.css — Semantic Entrance Animations
+   ==========================================================================
+   Pure CSS transitions triggered by .slide.active parent selector.
+   All visual values via CSS custom properties defined in theme :root blocks.
+
+   Design rules:
+   - Every animation must be scoped to prefers-reduced-motion: no-preference
+   - Transitions only — no keyframe animations (timing controlled by parent activation)
+   - Semantic pairing: animation type must match content type
+   - No all-slides-same-fade-up allowed
+   ========================================================================== */
+
+/* ==========================================================================
+   Base Reveal: Fade + Slide Up
+   Best for: bullet points, paragraphs, general content
+   Duration: 400ms | Stagger: 75ms per child
+   ========================================================================== */
+@media (prefers-reduced-motion: no-preference) {
+  .reveal {
+    opacity: 0;
+    transform: translateY(20px);
+    transition:
+      opacity var(--duration-normal, 400ms) var(--ease-out-expo, ease),
+      transform var(--duration-normal, 400ms) var(--ease-out-expo, ease);
+  }
+
+  .slide.active .reveal,
+  .slide.visible .reveal {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ==========================================================================
+   Reveal Scale: Scale In
+   Best for: KPI big numbers, key statistics, hero metrics
+   Duration: 500ms
+   ========================================================================== */
+@media (prefers-reduced-motion: no-preference) {
+  .reveal-scale {
+    opacity: 0;
+    transform: scale(0.9);
+    transition:
+      opacity var(--duration-slow, 700ms) var(--ease-out-expo, ease),
+      transform var(--duration-slow, 700ms) var(--ease-out-expo, ease);
+  }
+
+  .slide.active .reveal-scale,
+  .slide.visible .reveal-scale {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* ==========================================================================
+   Reveal Left: Slide from Left
+   Best for: timeline events, process steps, sequential items
+   Duration: 400ms | Stagger: 100ms per child
+   ========================================================================== */
+@media (prefers-reduced-motion: no-preference) {
+  .reveal-left {
+    opacity: 0;
+    transform: translateX(-30px);
+    transition:
+      opacity var(--duration-normal, 400ms) var(--ease-out-expo, ease),
+      transform var(--duration-normal, 400ms) var(--ease-out-expo, ease);
+  }
+
+  .slide.active .reveal-left,
+  .slide.visible .reveal-left {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* ==========================================================================
+   Reveal Right: Slide from Right
+   Best for: comparison panels, dual-entry content
+   Duration: 400ms
+   ========================================================================== */
+@media (prefers-reduced-motion: no-preference) {
+  .reveal-right {
+    opacity: 0;
+    transform: translateX(30px);
+    transition:
+      opacity var(--duration-normal, 400ms) var(--ease-out-expo, ease),
+      transform var(--duration-normal, 400ms) var(--ease-out-expo, ease);
+  }
+
+  .slide.active .reveal-right,
+  .slide.visible .reveal-right {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* ==========================================================================
+   Reveal Blur: Unblur
+   Best for: hero images, title slides, dramatic reveals
+   Duration: 700ms | Use sparingly — max 1 per deck
+   ========================================================================== */
+@media (prefers-reduced-motion: no-preference) {
+  .reveal-blur {
+    opacity: 0;
+    filter: blur(8px);
+    transition:
+      opacity var(--duration-slow, 700ms) var(--ease-out-expo, ease),
+      filter var(--duration-slow, 700ms) var(--ease-out-expo, ease);
+  }
+
+  .slide.active .reveal-blur,
+  .slide.visible .reveal-blur {
+    opacity: 1;
+    filter: blur(0);
+  }
+}
+
+/* ==========================================================================
+   Reveal None: Immediate
+   Best for: data tables, appendix slides, content where animation distracts
+   No transition.
+   ========================================================================== */
+.reveal-none {
+  opacity: 1;
+  transform: none;
+}
+
+/* ==========================================================================
+   Stagger Utilities
+   Apply to the PARENT container to stagger direct .reveal children.
+   ========================================================================== */
+@media (prefers-reduced-motion: no-preference) {
+  /* 75ms stagger — bullets, list items */
+  .stagger-75 > .reveal:nth-child(1),
+  .stagger-75 > .reveal-left:nth-child(1),
+  .stagger-75 > .reveal-right:nth-child(1) { transition-delay: 0ms; }
+
+  .stagger-75 > .reveal:nth-child(2),
+  .stagger-75 > .reveal-left:nth-child(2),
+  .stagger-75 > .reveal-right:nth-child(2) { transition-delay: 75ms; }
+
+  .stagger-75 > .reveal:nth-child(3),
+  .stagger-75 > .reveal-left:nth-child(3),
+  .stagger-75 > .reveal-right:nth-child(3) { transition-delay: 150ms; }
+
+  .stagger-75 > .reveal:nth-child(4),
+  .stagger-75 > .reveal-left:nth-child(4),
+  .stagger-75 > .reveal-right:nth-child(4) { transition-delay: 225ms; }
+
+  .stagger-75 > .reveal:nth-child(5),
+  .stagger-75 > .reveal-left:nth-child(5),
+  .stagger-75 > .reveal-right:nth-child(5) { transition-delay: 300ms; }
+
+  .stagger-75 > .reveal:nth-child(6),
+  .stagger-75 > .reveal-left:nth-child(6),
+  .stagger-75 > .reveal-right:nth-child(6) { transition-delay: 375ms; }
+
+  .stagger-75 > .reveal:nth-child(7),
+  .stagger-75 > .reveal-left:nth-child(7),
+  .stagger-75 > .reveal-right:nth-child(7) { transition-delay: 450ms; }
+
+  .stagger-75 > .reveal:nth-child(8),
+  .stagger-75 > .reveal-left:nth-child(8),
+  .stagger-75 > .reveal-right:nth-child(8) { transition-delay: 525ms; }
+
+  /* 100ms stagger — timeline events, process steps */
+  .stagger-100 > .reveal-left:nth-child(1),
+  .stagger-100 > .reveal:nth-child(1)  { transition-delay: 0ms; }
+  .stagger-100 > .reveal-left:nth-child(2),
+  .stagger-100 > .reveal:nth-child(2)  { transition-delay: 100ms; }
+  .stagger-100 > .reveal-left:nth-child(3),
+  .stagger-100 > .reveal:nth-child(3)  { transition-delay: 200ms; }
+  .stagger-100 > .reveal-left:nth-child(4),
+  .stagger-100 > .reveal:nth-child(4)  { transition-delay: 300ms; }
+  .stagger-100 > .reveal-left:nth-child(5),
+  .stagger-100 > .reveal:nth-child(5)  { transition-delay: 400ms; }
+  .stagger-100 > .reveal-left:nth-child(6),
+  .stagger-100 > .reveal:nth-child(6)  { transition-delay: 500ms; }
+
+  /* 0 stagger — all children reveal simultaneously (comparison, data) */
+  .stagger-0 > .reveal,
+  .stagger-0 > .reveal-scale,
+  .stagger-0 > .reveal-left,
+  .stagger-0 > .reveal-right {
+    transition-delay: 0ms;
+  }
+}
+
+/* ==========================================================================
+   KPI Value Animation: Scale + Fade
+   Applied automatically to .kpi-value inside .reveal-scale context
+   ========================================================================== */
+@media (prefers-reduced-motion: no-preference) {
+  .slide.active .kpi-value.reveal-scale {
+    transition-duration: 600ms;
+  }
+}
+
+/* ==========================================================================
+   Pipeline Step Reveal (manual advance)
+   Parent: .pipeline-steps — each child revealed one at a time
+   ========================================================================== */
+@media (prefers-reduced-motion: no-preference) {
+  .pipeline-steps > .pipeline-step {
+    opacity: 0;
+    transform: translateY(16px);
+    transition:
+      opacity 350ms var(--ease-out-expo, ease),
+      transform 350ms var(--ease-out-expo, ease);
+  }
+
+  .pipeline-steps > .pipeline-step.revealed {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ==========================================================================
+   Architecture Layer Reveal
+   Layers build up from bottom to top
+   ========================================================================== */
+@media (prefers-reduced-motion: no-preference) {
+  .arch-layers > .arch-layer {
+    opacity: 0;
+    transform: translateY(24px);
+    transition:
+      opacity 400ms var(--ease-out-expo, ease),
+      transform 400ms var(--ease-out-expo, ease);
+  }
+
+  .slide.active .arch-layers > .arch-layer:nth-child(1) { transition-delay: 0ms; }
+  .slide.active .arch-layers > .arch-layer:nth-child(2) { transition-delay: 120ms; }
+  .slide.active .arch-layers > .arch-layer:nth-child(3) { transition-delay: 240ms; }
+  .slide.active .arch-layers > .arch-layer:nth-child(4) { transition-delay: 360ms; }
+  .slide.active .arch-layers > .arch-layer:nth-child(5) { transition-delay: 480ms; }
+
+  .slide.active .arch-layers > .arch-layer {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ==========================================================================
+   Comparison Reveal
+   Left panel slides from left, right panel slides from right
+   ========================================================================== */
+@media (prefers-reduced-motion: no-preference) {
+  .compare-reveal .compare-left {
+    opacity: 0;
+    transform: translateX(-24px);
+    transition: all var(--duration-normal, 400ms) var(--ease-out-expo, ease);
+  }
+
+  .compare-reveal .compare-right {
+    opacity: 0;
+    transform: translateX(24px);
+    transition: all var(--duration-normal, 400ms) var(--ease-out-expo, ease);
+  }
+
+  .slide.active .compare-reveal .compare-left,
+  .slide.active .compare-reveal .compare-right {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "source": "assets/logos/main-uog-logo-artwork/SVG/Unboxed colour logo white text.svg",
+  "derived": "assets/logos/main-uog-logo-artwork/SVG/uog-white-text-cropped-for-header.svg",
+  "raster_width": 4000,
+  "raster_height": 2159,
+  "alpha_threshold": 8,
+  "original_viewBox": "0.0 0.0 235.28 126.98",
+  "scale_x": 0.05882,
+  "scale_y": 0.05881427,
+  "scale_diff_pct": 0.01,
+  "raw_bbox": {
+    "x_min": 670,
+    "y_min": 665,
+    "x_max": 3327,
+    "y_max": 1487,
+    "width": 2657,
+    "height": 822
+  },
+  "padded_bbox": {
+    "x_min": 564,
+    "y_min": 566,
+    "x_max": 3433,
+    "y_max": 1586,
+    "width": 2869,
+    "height": 1020
+  },
+  "derived_viewBox": "33.1745 33.2889 168.7546 59.9906",
+  "self_check_margins": {
+    "left_pct": 3.6,
+    "right_pct": 3.6,
+    "top_pct": 9.7,
+    "bottom_pct": 9.6,
+    "bbox": [
+      73,
+      69,
+      1926,
+      642
+    ],
+    "raster_size": [
+      2000,
+      711
+    ]
+  },
+  "self_check_pass": true
+}

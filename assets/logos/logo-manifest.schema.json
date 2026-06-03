@@ -1,0 +1,220 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://nashui.dev/uog-slides/logo-manifest.schema.json",
+  "title": "Logo Manifest",
+  "description": "Schema for logo asset registration in nashui-uog-slides-skill",
+  "type": "object",
+  "required": ["version", "logos"],
+  "properties": {
+    "version": {
+      "type": "string",
+      "description": "Manifest format version",
+      "enum": ["1.0.0"]
+    },
+    "logos": {
+      "type": "object",
+      "description": "Logo entries keyed by logo ID",
+      "additionalProperties": false,
+      "properties": {
+        "uog-primary": {
+          "type": "object",
+          "description": "Primary University of Glasgow logo",
+          "required": ["name", "source", "variants"],
+          "properties": {
+            "name": { "type": "string", "const": "University of Glasgow" },
+            "source": { "type": "string", "description": "URL to official logo download page" },
+            "variants": {
+              "type": "object",
+              "properties": {
+                "light": {
+                  "type": "object",
+                  "required": ["file", "format", "description"],
+                  "properties": {
+                    "file": { "type": "string", "pattern": "\\.(svg|png)$" },
+                    "format": { "type": "string", "enum": ["svg", "png"] },
+                    "width": { "type": "number", "description": "Natural width in px" },
+                    "height": { "type": "number", "description": "Natural height in px" },
+                    "description": { "type": "string" }
+                  }
+                },
+                "dark": {
+                  "type": "object",
+                  "required": ["file", "format", "description"],
+                  "properties": {
+                    "file": { "type": "string", "pattern": "\\.(svg|png)$" },
+                    "format": { "type": "string", "enum": ["svg", "png"] },
+                    "width": { "type": "number" },
+                    "height": { "type": "number" },
+                    "description": { "type": "string" }
+                  }
+                },
+                "mono": {
+                  "type": "object",
+                  "required": ["file", "format", "description"],
+                  "properties": {
+                    "file": { "type": "string", "pattern": "\\.(svg|png)$" },
+                    "format": { "type": "string", "enum": ["svg", "png"] },
+                    "width": { "type": "number" },
+                    "height": { "type": "number" },
+                    "description": { "type": "string" }
+                  }
+                }
+              },
+              "minProperties": 1
+            },
+            "clearspace": {
+              "type": "string",
+              "description": "Required clearspace around logo (e.g., '50% of logo height')"
+            },
+            "minDisplayHeight": {
+              "type": "number",
+              "description": "Minimum display height in pixels for digital use"
+            }
+          }
+        },
+        "uog-school": {
+          "type": "object",
+          "description": "School or college logo",
+          "required": ["name", "source", "variants"],
+          "properties": {
+            "name": { "type": "string", "description": "School/college name" },
+            "source": { "type": "string" },
+            "variants": {
+              "type": "object",
+              "properties": {
+                "light": {
+                  "type": "object",
+                  "required": ["file", "format", "description"],
+                  "properties": {
+                    "file": { "type": "string" },
+                    "format": { "type": "string", "enum": ["svg", "png"] },
+                    "width": { "type": "number" },
+                    "height": { "type": "number" },
+                    "description": { "type": "string" }
+                  }
+                },
+                "dark": {
+                  "type": "object",
+                  "required": ["file", "format", "description"],
+                  "properties": {
+                    "file": { "type": "string" },
+                    "format": { "type": "string", "enum": ["svg", "png"] },
+                    "width": { "type": "number" },
+                    "height": { "type": "number" },
+                    "description": { "type": "string" }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "project": {
+          "type": "object",
+          "description": "Project-specific logo",
+          "required": ["name", "variants"],
+          "properties": {
+            "name": { "type": "string" },
+            "variants": {
+              "type": "object",
+              "properties": {
+                "light": {
+                  "type": "object",
+                  "required": ["file", "format"],
+                  "properties": {
+                    "file": { "type": "string" },
+                    "format": { "type": "string", "enum": ["svg", "png"] },
+                    "width": { "type": "number" },
+                    "height": { "type": "number" }
+                  }
+                },
+                "dark": {
+                  "type": "object",
+                  "required": ["file", "format"],
+                  "properties": {
+                    "file": { "type": "string" },
+                    "format": { "type": "string", "enum": ["svg", "png"] },
+                    "width": { "type": "number" },
+                    "height": { "type": "number" }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "partners": {
+          "type": "array",
+          "description": "Partner logos",
+          "items": {
+            "type": "object",
+            "required": ["name", "file", "format"],
+            "properties": {
+              "name": { "type": "string" },
+              "file": { "type": "string" },
+              "format": { "type": "string", "enum": ["svg", "png"] },
+              "width": { "type": "number" },
+              "height": { "type": "number" },
+              "url": { "type": "string", "format": "uri" },
+              "usageNotes": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "placement": {
+      "type": "object",
+      "description": "Placement rules per slide type",
+      "properties": {
+        "titleSlide": {
+          "type": "object",
+          "properties": {
+            "logos": {
+              "type": "array",
+              "description": "Logo IDs to place on title slide, in order",
+              "items": { "type": "string" }
+            },
+            "position": {
+              "type": "string",
+              "enum": ["top-left", "top-right", "bottom-left", "bottom-right", "top-bar", "bottom-bar"]
+            }
+          }
+        },
+        "contentSlide": {
+          "type": "object",
+          "properties": {
+            "logos": {
+              "type": "array",
+              "description": "Logo IDs to place on content slides",
+              "items": { "type": "string" }
+            },
+            "position": {
+              "type": "string",
+              "enum": ["bottom-left", "bottom-right", "footer-bar"]
+            }
+          }
+        },
+        "sectionDivider": {
+          "type": "object",
+          "properties": {
+            "logos": {
+              "type": "array",
+              "items": { "type": "string" }
+            },
+            "position": {
+              "type": "string",
+              "enum": ["centered", "bottom-center"]
+            }
+          }
+        },
+        "partnerRow": {
+          "type": "object",
+          "description": "Dedicated partner logo row slide",
+          "properties": {
+            "maxLogosPerRow": { "type": "number", "default": 5 },
+            "equalHeight": { "type": "boolean", "default": true },
+            "maxLogoHeight": { "type": "number", "description": "px" }
+          }
+        }
+      }
+    }
+  }
+}

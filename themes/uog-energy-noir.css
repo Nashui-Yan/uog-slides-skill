@@ -1,0 +1,216 @@
+/* ==========================================================================
+   Theme: UoG Energy Noir
+   Purpose: Dark premium technical — digital twin, CPS, energy, IoT systems
+   Palette: University Blue dominant on dark backgrounds, restrained data accents
+   ========================================================================== */
+
+@import url('../viewport-base.css');
+@import url('../grid-system.css');
+@import url('../animations.css');
+@import url('../slide-types.css');
+
+:root {
+  /* === Typography === */
+  /* TODO: Replace with official UoG typeface after scraping typography page */
+  --font-display: 'Georgia', 'Times New Roman', serif;
+  --font-body: 'system-ui', '-apple-system', 'Segoe UI', 'Helvetica Neue', sans-serif;
+  --font-mono: 'SF Mono', 'Cascadia Code', 'Consolas', monospace;
+
+  /* === Type Scale (1920×1080 stage) — UoG Institutional === */
+  --title-size:       clamp(60px, 3.5vw, 76px);   /* Main titles */
+  --subtitle-size:    clamp(28px, 1.7vw, 36px);   /* Subtitle / context */
+  --bullet-size:      clamp(38px, 2.3vw, 52px);   /* Big bullet text */
+  --supporting-size:  clamp(30px, 1.8vw, 40px);   /* Supporting paragraphs */
+  --caption-size:     clamp(24px, 1.4vw, 30px);   /* Figure/table captions */
+  --footer-size:      clamp(20px, 1.2vw, 26px);   /* Footer, meta, dates */
+  --h2-size:          clamp(48px, 2.8vw, 64px);   /* Second-level headings */
+  --h3-size:          clamp(36px, 2.1vw, 48px);   /* Third-level headings */
+  --small-size:       clamp(18px, 1vw, 24px);     /* Small UI / badges */
+  --body-size:        clamp(30px, 1.8vw, 40px);   /* General body (alias) */
+
+  /* === Spacing (1920x1080 stage) === */
+  --slide-padding: clamp(48px, 5vw, 96px);
+  --content-gap: clamp(20px, 2.2vw, 40px);
+  --section-gap: clamp(32px, 3.3vw, 64px);
+
+  /* === Primary Brand === */
+  --uog-blue: #011451;
+  --uog-blue-rgb: 1, 20, 81;
+
+  /* === Theme: Dark Premium Technical === */
+  --slide-bg: #0A0B0F;                /* near-black, slightly cool */
+  --slide-bg-alt: #11131A;            /* alternate dark surface */
+  --text-primary: #E8E9EC;            /* near-white, slightly softened */
+  --text-secondary: #B0B3BB;           /* mid-grey for body */
+  --text-muted: #6B6E78;              /* muted for captions */
+  --border-color: rgba(255, 255, 255, 0.08);
+  --divider-color: rgba(255, 255, 255, 0.05);
+
+  /* === Accent colours (from secondary palette, tuned for dark bg) === */
+  --accent: #4DBBC6;                  /* UoG Light Blue — pops on dark */
+  --accent-rgb: 77, 187, 198;
+  --accent-warm: #F2D25C;             /* UoG Light Yellow */
+  --accent-warm-rgb: 242, 210, 92;
+  --accent-cool: #81C071;             /* UoG Light Green — data systems accent */
+  --accent-cool-rgb: 129, 192, 113;
+  --highlight: #E98BAF;               /* UoG Light Pink — alert/emphasis */
+  --highlight-rgb: 233, 139, 175;
+
+  /* === Brand presence on dark === */
+  --brand-glow: 0 0 40px rgba(1, 20, 81, 0.4);
+
+  /* === Data palette (charts, graphs, KPI indicators — light series on dark) === */
+  --data-1: #4DBBC6;                  /* Light Blue */
+  --data-2: #F2D25C;                  /* Light Yellow */
+  --data-3: #81C071;                  /* Light Green */
+  --data-4: #E98BAF;                  /* Light Pink */
+  --data-5: #A5A1CE;                  /* Light Purple */
+  --data-6: #011451;                  /* University Blue (as data fill) */
+
+  /* === Decorative === */
+  --brand-stripe-color: var(--uog-blue);
+  --brand-stripe-width: 4px;
+  --logo-max-height: 48px;
+  --footer-logo-max-height: 28px;     /* smaller on dark to avoid glare */
+
+  /* === Shadows (inverted for dark theme — glows instead of shadows) === */
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.5);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.6);
+
+  /* === Component Tokens === */
+  --card-bg: rgba(255, 255, 255, 0.03);
+  --card-border: rgba(255, 255, 255, 0.06);
+  --callout-bg: rgba(77, 187, 198, 0.06);
+  --code-bg: rgba(255, 255, 255, 0.04);
+  --partner-logo-max-height: 60px;
+
+  /* === Animation timing === */
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --duration-fast: 200ms;
+  --duration-normal: 400ms;
+  --duration-slow: 700ms;
+
+  /* === Border radius === */
+  --radius-sm: 2px;
+  --radius-md: 4px;
+  --radius-lg: 8px;
+}
+
+/* ==========================================================================
+   Theme-Specific Slide Type Overrides — Energy Noir
+   Dark, premium, technical, glowing accents.
+   ========================================================================== */
+
+/* Cover */
+.slide.title-slide {
+  background: linear-gradient(135deg, var(--uog-blue) 0%, #0A0B0F 100%);
+  color: #FFFFFF;
+}
+
+/* Section Divider */
+.slide.section-divider {
+  background: var(--uog-blue);
+  color: #FFFFFF;
+}
+
+/* Research Question — Cyan glow accent */
+.slide.research-question .question-block {
+  border-left-color: var(--accent, #4DBBC6);
+}
+
+/* Problem Framing — Subtle divider */
+.slide.problem-framing .problem-statement {
+  border-right-color: var(--border-color);
+}
+
+/* System Architecture — Glowing dark cards */
+.slide.system-architecture .arch-card {
+  background: var(--card-bg);
+  border-color: var(--card-border);
+}
+
+/* Pipeline / DAG — Cyan nodes on dark */
+.slide.pipeline-dag .pipeline-node {
+  background: var(--accent, #4DBBC6);
+  color: var(--uog-blue);
+}
+
+.slide.pipeline-dag .pipeline-arrow {
+  background: var(--accent, #4DBBC6);
+}
+
+.slide.pipeline-dag .pipeline-arrow::after {
+  border-left-color: var(--accent, #4DBBC6);
+}
+
+/* Method / Algorithm — Code blocks with accent text */
+.slide.method-algorithm pre,
+.slide.method-algorithm code {
+  background: var(--code-bg);
+  border-color: var(--card-border);
+  color: var(--accent, #4DBBC6);
+}
+
+.slide.method-algorithm .method-step::before {
+  background: var(--accent, #4DBBC6);
+  color: var(--uog-blue);
+}
+
+/* Benchmark KPI — Cyan glow on dark */
+.slide.benchmark-kpi .kpi-hero {
+  border-color: var(--accent, #4DBBC6);
+  background: rgba(77, 187, 198, 0.04);
+}
+
+.slide.benchmark-kpi .kpi-value {
+  color: var(--accent, #4DBBC6);
+}
+
+/* Comparison — Winner gets cyan border */
+.slide.comparison-ablation .compare-panel.winner {
+  border-color: var(--accent, #4DBBC6);
+}
+
+/* Timeline — Yellow markers on dark */
+.slide.timeline-roadmap .timeline {
+  border-left-color: var(--accent, #4DBBC6);
+}
+
+.slide.timeline-roadmap .event-marker {
+  background: var(--accent-warm, #F2D25C);
+  color: var(--uog-blue);
+}
+
+/* Limitation / Risk — Pink/highlight on dark */
+.slide.limitation-risk .risk-cell.critical {
+  border-left-color: var(--uog-light-pink, #E98BAF);
+}
+
+.slide.limitation-risk .risk-cell.high {
+  border-left-color: var(--highlight, #F2D25C);
+}
+
+/* Closing — University Blue gradient */
+.slide.closing-takeaway {
+  background: linear-gradient(135deg, var(--uog-blue) 0%, #0A0B0F 100%);
+  color: #FFFFFF;
+}
+
+.slide.closing-takeaway .takeaway-list li::before {
+  color: var(--accent, #4DBBC6);
+}
+
+/* Architecture layers — Cyan highlight */
+.arch-layer.layer-highlight {
+  border-left-color: var(--accent, #4DBBC6);
+}
+
+/* Print Overrides */
+@media print {
+  .slide {
+    background: #FFFFFF !important;
+    color: var(--uog-blue) !important;
+  }
+}
