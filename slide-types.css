@@ -938,6 +938,68 @@
 }
 
 /* ==========================================================================
+   Figure Layouts
+   ========================================================================== */
+
+/* Single Figure — centered, scaled to safe area */
+.layout-single-figure .uog-slide-body {
+  display: flex; align-items: center; justify-content: center;
+}
+.layout-single-figure figure {
+  width: 100%; height: 100%;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+}
+.layout-single-figure img {
+  max-width: 100%; max-height: 660px;
+  object-fit: contain;
+}
+.layout-single-figure figcaption {
+  margin-top: 16px;
+  font-family: var(--font-body);
+  font-size: var(--caption-size); color: var(--text-secondary);
+  text-align: center; max-width: 1000px;
+}
+
+/* Two Figures + Bottom Takeaway */
+.layout-two-figure-plus-takeaway .uog-slide-body {
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
+  gap: 32px; height: 100%;
+}
+.uog-two-figure-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 36px; min-height: 0;
+}
+.uog-figure-panel {
+  display: flex; flex-direction: column;
+  justify-content: center;
+  min-width: 0; min-height: 0;
+}
+.uog-figure-panel img {
+  width: 100%; max-height: 400px;
+  object-fit: contain;
+}
+.uog-figure-panel figcaption {
+  margin-top: 12px;
+  font-family: var(--font-body);
+  font-size: clamp(22px, 1.2vw, 28px);
+  line-height: 1.25; color: var(--text-secondary);
+  text-align: center;
+}
+
+/* Bottom Takeaway Band */
+.uog-bottom-takeaway {
+  border-left: 8px solid var(--accent, #005398);
+  background: rgba(0, 83, 152, 0.06);
+  padding: 22px 28px;
+  font-family: var(--font-body);
+  font-size: clamp(26px, 1.4vw, 34px);
+  line-height: 1.28; color: var(--uog-blue);
+}
+
+/* ==========================================================================
    SECTION B: Component Classes
    ========================================================================== */
 

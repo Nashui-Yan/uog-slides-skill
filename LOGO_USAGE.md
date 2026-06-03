@@ -159,6 +159,28 @@ Each logo can have three variants:
 - Monochrome variant preferred on coloured backgrounds
 - Logo size: 60–80% of standard size for visual weight balance
 
+### Strict Logo Policy
+
+**Normal content slides may contain exactly one institutional logo: the UoG
+logo inside the fixed header blue block (`.uog-logo-blue-block`).**
+
+Forbidden on normal slides:
+- Footer logos
+- Bottom-right logos
+- Corner logos
+- Source-LaTeX/PDF logos
+- Small repeated UoG marks
+- Partner logos
+- Watermark logos
+- Slide-number + logo combo footers
+
+**Partner logos**: Disabled by default. Only allowed if user explicitly
+requests. Only on cover and closing pages. Only in the bottom-left logo row.
+
+**Source documents**: If LaTeX/PDF/source includes footer logo commands or
+embedded logo images, the generator MUST ignore them. Source logos are
+visual artifacts, not content.
+
 ### Partner Logo Row
 
 ```

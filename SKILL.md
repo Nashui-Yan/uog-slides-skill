@@ -162,7 +162,52 @@ When generating HTML, follow these constraints:
 
 ## Visual Style Requirements
 
-Read `VISUAL_STYLE_BRIEF.md` for the full specification. Key rules:
+Read `VISUAL_STYLE_BRIEF.md` for the full specification.
+Hard layout rules: `references/layout_quality_rules.md`
+Canonical templates: `references/canonical_templates.md`
+Figure layouts: `references/figure_layout_decision_rules.md`
+
+### Canonical Template Lock
+
+The following slide types are **LOCKED** canonical templates. The generator
+may replace text content, but must NOT change visual structure, geometry,
+logo placement, or layout style:
+
+1. **Cover page** — White bg, full-width blue band, bottom-left logo row
+2. **Contents page** — Normal header, structured agenda rows (`.uog-agenda-list`)
+3. **Closing page** — White bg, full-width blue band, bottom-left logo row
+4. **Normal header** — Blue logo block flush left, title/subtitle right
+
+> Cover, closing, and contents slides are canonical templates. They are not
+> adaptive layouts. Source documents may provide their text content, but
+> must not change their visual style.
+
+Full specification: `references/canonical_templates.md`
+
+### Source Separation
+
+Source decks/reports are content sources, not visual authorities. The UoG
+skill owns the visual system. Ignore source-document footer logos, theme
+colours, page geometry, margins, logo commands, and layout artifacts.
+
+### No Logos on Normal Content Slides
+
+Normal slides use ONLY the header logo inside `.uog-logo-blue-block`.
+No bottom-right logos, footer logos, corner marks, partner logos, or
+source-document logos. Partner logos: cover/closing only, only if user
+explicitly requests. See `references/layout_quality_rules.md` Rule 3+8.
+
+### Figure Layout Decision Rules
+
+The generator must choose a figure layout from the decision table in
+`references/figure_layout_decision_rules.md`. Key rules:
+
+- **1 figure + <50 words** → `.layout-single-figure` (centered, scaled to safe area)
+- **1 figure + 50-120 words** → `.layout-figure-left` or `.layout-figure-right`
+- **2 figures + <60 words** → `.layout-two-figure-plus-takeaway` (add interpretation band)
+- **Large figures** → scale to fit safe area, `object-fit: contain`, never overflow
+- **Three-card findings** → must have bottom interpretation band
+- **Underfilled slides** (>35% blank) → add short takeaway, not filler text
 
 ### Typography
 - Main title: 60–76px, weight 700–800, University Blue

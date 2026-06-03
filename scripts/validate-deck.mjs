@@ -582,6 +582,150 @@ function checkSlideHeaderSystem(html) {
   }
 }
 
+
+
+function checkCanonicalTemplates(html) {
+  // Cover must use canonical structure
+  if (/class=["'][^"']*title-slide[^"']*["']/.test(html)) {
+    if (!/uog-cover-band/.test(html)) {
+      issue('P1', 'Cover missing .uog-cover-band — canonical cover requires full-width blue band. See references/canonical_templates.md.');
+    }
+    if (!/uog-cover-logo-row/.test(html)) {
+      issue('P1', 'Cover missing .uog-cover-logo-row — canonical cover requires bottom-left logo row.');
+    }
+    // Cover must use white background, not dark
+    if (/\.slide\.title-slide\s*\{[^}]*background\s*:\s*var\(--uog-blue\)/.test(html) ||
+        /\.slide\.title-slide\s*\{[^}]*background\s*:\s*#011451/.test(html)) {
+      issue('P1', 'Cover uses dark full-slide background — canonical cover requires white background + blue band.');
+    }
+  }
+
+  // Closing must use canonical structure
+  if (/class=["'][^"']*closing-takeaway[^"']*["']/.test(html)) {
+    if (!/uog-closing-band/.test(html)) {
+      issue('P1', 'Closing missing .uog-closing-band — canonical closing requires full-width blue band. See references/canonical_templates.md.');
+    }
+    if (!/uog-cover-logo-row/.test(html)) {
+      issue('P1', 'Closing missing .uog-cover-logo-row — canonical closing requires bottom-left logo row.');
+    }
+  }
+
+  // Contents slide — if present, must use canonical agenda layout
+  if (/data-slide-type=["']contents["']/.test(html) || /Contents|Agenda|Outline/.test(html)) {
+    if (!/uog-agenda-list/.test(html) && /class=["'][^"']*slide["'].*data-slide-type=["']contents/.test(html)) {
+      issue('P2', 'Contents slide present but not using .uog-agenda-list — canonical contents requires structured agenda rows.');
+    }
+  }
+}
+
+function checkFigureLayouts(html) {
+  // Check for two figures without bottom takeaway
+  const figureImgs = html.match(/<img[^>]*>/gi) || [];
+  const hasTwoFigures = figureImgs.length >= 2;
+  const hasTakeaway = /uog-bottom-takeaway/.test(html);
+  const hasTwoFigureLayout = /layout-two-figure-plus-takeaway/.test(html);
+
+  if (hasTwoFigures && !hasTakeaway && !hasTwoFigureLayout) {
+    // Only warn on slides that look like figure-focused slides
+    const figcaptionCount = (html.match(/<figcaption/gi) || []).length;
+    if (figcaptionCount >= 2) {
+      issue('P2', 'Two figures with captions but no bottom takeaway — consider .layout-two-figure-plus-takeaway to add an interpretation band. See references/figure_layout_decision_rules.md.');
+    }
+  }
+
+  // Check for figures between paragraphs (sandwich pattern)
+  if (/<p[^>]*>[\s\S]{50,}<\/p>\s*<img[^>]*>\s*<p[^>]*>[\s\S]{50,}<\/p>/i.test(html)) {
+    issue('P2', 'Figure appears between two paragraphs — use a deliberate figure layout instead. See references/figure_layout_decision_rules.md.');
+  }
+
+  // Check images use object-fit: contain
+  const imgStyles = html.match(/<img[^>]*style=["'][^"']*["']/gi) || [];
+  let missingContain = 0;
+  for (const is of imgStyles) {
+    if (is.includes('logo') || is.includes('uog')) continue; // skip logos
+    if (!/object-fit/.test(is)) missingContain++;
+  }
+  if (missingContain > 3) {
+    issue('P2', `${missingContain} images may lack object-fit: contain — figures should scale safely within their containers.`);
+  }
+
+  // Check for three-card findings without takeaway
+  const kpiRows = (html.match(/kpi-row/gi) || []).length;
+  if (kpiRows >= 1 && !hasTakeaway && !/uog-bottom-takeaway/.test(html)) {
+    issue('P2', 'KPI/three-card slide without bottom takeaway — add interpretation band explaining what the findings mean.');
+  }
+}
+
+
+function checkCanonicalCover(html) {
+  // Cover must use white background + blue band, not dark full-slide bg
+  if (/class=["'][^"]*title-slide[^"]*["']/.test(html)) {
+    // Check for dark cover background pattern (old style — should be white)
+    if (/\.slide\.title-slide\s*\{[^}]*background\s*:\s*var\(--uog-blue\)/.test(html) ||
+        /\.slide\.title-slide\s*\{[^}]*background\s*:\s*#011451/.test(html)) {
+      issue('P1', 'Cover uses dark full-slide background — canonical cover requires white background + full-width blue band',
+        'See references/layout_quality_rules.md Rule 1.');
+    }
+    // Cover should have .uog-cover-band
+    if (!/uog-cover-band/.test(html)) {
+      issue('P1', 'Cover missing .uog-cover-band — canonical cover requires full-width blue band');
+    }
+  }
+}
+
+function checkNoFooterLogos(html) {
+  // Check for small UoG logos in footer/corner positions on normal slides
+  // Pattern: small img with logo in a slide-footer div, or img near bottom-right
+  const hasFooterLogoDiv = /class=["'][^"]*slide-footer[^"]*["']/.test(html);
+  const hasFooterLogoImg = /slide-footer[\s\S]{0,200}<img[^>]*(?:logo|uog|glasgow|Unboxed)/i.test(html);
+
+  if (hasFooterLogoDiv && hasFooterLogoImg) {
+    issue('P1', 'Footer logo detected on normal slides — only the header logo block is allowed on content slides. Remove all slide-footer logos.',
+      'See references/layout_quality_rules.md Rule 3.');
+  } else if (hasFooterLogoDiv) {
+    issue('P2', 'slide-footer divs detected — ensure they do not contain logos');
+  }
+
+  // Count logo images that are NOT in the header logo block
+  // Header logos inside .uog-logo-blue-block are legitimate
+  const allLogoImgs = html.match(/<img[^>]*(?:logo|uog|glasgow|Unboxed)[^>]*>/gi) || [];
+  const headerLogos = html.match(/uog-logo-blue-block[\s\S]{0,300}<img[^>]*>/gi) || [];
+  const nonHeaderLogoCount = allLogoImgs.length - headerLogos.length;
+  if (nonHeaderLogoCount > 4) {
+    issue('P2', `${nonHeaderLogoCount} non-header logo images found — normal slides should have only the header logo block. Check for accidental footer/corner logos.`);
+  }
+}
+
+function checkSafeArea(html) {
+  // Warn if content may be below safe area
+  // Check for bottom-related positioning that's too low
+  const bottomPositions = html.match(/bottom\s*:\s*(\d+)px/gi) || [];
+  for (const bp of bottomPositions) {
+    const px = parseInt(bp.match(/\d+/)[0]);
+    if (px < 40) {
+      issue('P2', `Content positioned at bottom:${px}px — may overflow safe area. Minimum bottom margin is 64px.`);
+      break;
+    }
+  }
+
+  // Check for dense slides: many bullet items
+  const bulletCount = (html.match(/<li[^>]*>/gi) || []).length;
+  const slideCount = (html.match(/class=["'][^"]*slide[^"]*["']/gi) || []).length;
+  if (slideCount > 0 && bulletCount / slideCount > 6) {
+    issue('P2', `Average ${Math.round(bulletCount/slideCount)} bullets per slide — some slides may be too dense. Split slides with >5 bullets + figure.`);
+  }
+}
+
+function checkFigurePlacement(html) {
+  // Detect paragraph→figure→paragraph sandwich pattern (rough heuristic)
+  const sandwichPattern = /<p[^>]*>[\s\S]{50,}<\/p>\s*<img[^>]*>\s*<p[^>]*>[\s\S]{50,}<\/p>/i;
+  if (sandwichPattern.test(html)) {
+    issue('P2', 'Possible figure-between-paragraphs pattern detected — use deliberate two-column or full-width figure layouts instead.',
+      'See references/layout_quality_rules.md Rule 6.');
+  }
+}
+
+
 function checkLayoutVariety(html) {
   // Parse slide classes to count layout diversity
   const slideMatches = html.match(/class=["'][^"']*slide[^"']*["']/gi) || [];
@@ -774,6 +918,12 @@ Exit codes:
   checkContentDensity(html);
   checkReducedMotionIntegrity(html);
   checkPrintOverrides(html);
+  checkCanonicalTemplates(html);
+  checkFigureLayouts(html);
+  checkCanonicalCover(html);
+  checkNoFooterLogos(html);
+  checkSafeArea(html);
+  checkFigurePlacement(html);
   checkLayoutVariety(html);
   checkSlideHeaderSystem(html);
   checkLogoManifest(html, checkLogos);
