@@ -109,12 +109,28 @@ Do NOT add filler paragraphs. The takeaway must be content-derived.
 > Large figures MUST be scaled to fit the body safe area. Never overflow.
 > Never crop unless explicitly requested. Use `object-fit: contain`.
 
-- Single figure: max-height ~660–720px, centered
-- With takeaway below: max-height ~580–640px
-- Two figures side by side: max-height ~400–450px each
-- Two figures with takeaway: max-height ~380–430px each
-- If labels become unreadable after scaling → split the slide
-- If figure is too small to read after scaling → use a dedicated figure slide with zoom
+**Concrete maximum image heights by layout:**
+
+| Layout | Max Image Height | Notes |
+|--------|-----------------|-------|
+| Single figure only (no caption) | 720px | Centered in body |
+| Single figure + caption | 660px | Caption below |
+| Single figure + takeaway | 600px | Takeaway band below |
+| Figure + compact bottom bullets | 540px | 2–3 bullets max |
+| Two figures side by side | 460px each | Equal width columns |
+| Two figures + takeaway | 400px each | With bottom interpretation |
+| Side-column figure | 620px | Text in other column |
+| KPI cards (3-column) | N/A | min-height: 190px per card |
+
+Before splitting a large-figure slide, try scale-to-fit:
+1. Constrain image with `max-height`
+2. Use `object-fit: contain`
+3. Reduce caption length
+4. Reduce body text to a short takeaway
+5. If unreadable, split into zoom/detail slide
+
+Never: overflow the figure, push bullets under the navigation overlay, use
+unconstrained image height, or place a full-width large figure plus long bullets.
 
 ## Three-Card Findings Slides
 

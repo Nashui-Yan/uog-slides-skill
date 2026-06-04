@@ -584,6 +584,236 @@ function checkSlideHeaderSystem(html) {
 
 
 
+
+function checkTemplateInvariants(html) {
+  // Cover must use canonical logo row (uog-cover-logo-row), not tiny/corner logo
+  if (/class=["'][^"']*title-slide[^"']*["']/.test(html)) {
+    if (!/uog-cover-logo-row/.test(html)) {
+      issue('P1', 'Cover missing .uog-cover-logo-row — canonical cover requires bottom-left logo row. See references/template_invariants.md.');
+    }
+    // Cover must not have normal header logo block in its DOM (not just CSS)
+    // Check: a section with title-slide class containing uog-logo-anchor as a child element
+    const coverSection = html.match(/<section[^>]*class=["'][^"']*title-slide[^"']*["'][^>]*>[\s\S]{0,1500}<\/section>/i);
+    if (coverSection && /uog-logo-anchor/.test(coverSection[0])) {
+      issue('P1', 'Cover slide contains normal header logo block — cover uses bottom-left logo row, not the normal header. See references/template_invariants.md.');
+    }
+    // Cover must have white bg, not dark
+    if (/\.slide\.title-slide\s*\{[^}]*background\s*:\s*(?:var\(--uog-blue\)|#011451)/.test(html)) {
+      issue('P1', 'Cover uses dark full-slide background — canonical cover requires white background + blue band.');
+    }
+  }
+
+  // Closing must use canonical structure
+  if (/class=["'][^"']*closing-takeaway[^"']*["']/.test(html)) {
+    if (!/uog-cover-logo-row/.test(html)) {
+      issue('P1', 'Closing missing .uog-cover-logo-row — canonical closing requires bottom-left logo row.');
+    }
+    if (!/uog-closing-band/.test(html)) {
+      issue('P1', 'Closing missing .uog-closing-band — canonical closing requires full-width blue band.');
+    }
+    // Closing must not use tiny corner logo
+    if (!/uog-cover-footer-logo/.test(html) && /<img[^>]*logo/i.test(html)) {
+      issue('P2', 'Closing has logo image but not .uog-cover-footer-logo — logo may be incorrectly sized or placed.');
+    }
+  }
+
+  // Contents must use canonical agenda list
+  if (/data-slide-type=["']contents["']/.test(html)) {
+    if (!/uog-agenda-list/.test(html)) {
+      issue('P1', 'Contents slide missing .uog-agenda-list — canonical contents requires structured agenda rows. See references/template_invariants.md.');
+    }
+  }
+}
+
+
+function checkVerticalComposition(html) {
+  // Footer-like paragraph after figure without composition wrapper
+  const figureFollowedByText = /<img[^>]*>[\s\S]{0,300}<(?:p|figcaption|div)[^>]*>(?![\s\S]*?uog-figure-block)/i;
+  if (figureFollowedByText.test(html) && !/uog-body-center|uog-body-grid-center|uog-body-composition/.test(html)) {
+    issue('P2', 'Figure followed by text without body-centering wrapper — content may drift toward bottom. Use .uog-body-composition or .uog-figure-block.');
+  }
+
+  // Bottom takeaway without composition wrapper
+  if (/uog-bottom-takeaway/.test(html) && !/uog-body-center|uog-body-grid-center|uog-body-composition|layout-kpi-takeaway|layout-two-figure-plus-takeaway/.test(html)) {
+    issue('P2', 'Bottom takeaway present but no centred composition wrapper or safe-area layout. Takeaway may render too low.');
+  }
+
+  // Caption/figcaption outside figure block — possible footer drift
+  const figcaptions = html.match(/<figcaption[^>]*>/gi) || [];
+  if (figcaptions.length > 0 && !/uog-figure-block/.test(html)) {
+    issue('P2', 'Figcaption used without .uog-figure-block — caption may drift from figure. Use .uog-figure-block to keep caption+description attached.');
+  }
+
+  // Description text too long (>55 words) risks overflow
+  const descMatch = html.match(/uog-figure-description[^>]*>([\s\S]{0,600})<\/(?:p|div)>/i);
+  if (descMatch) {
+    const words = descMatch[1].replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim().split(' ').length;
+    if (words > 55) {
+      issue('P2', `Figure description is ~${words} words — keep descriptions under 55 words or move to side column.`);
+    }
+  }
+
+  // Vertical alignment: warn if slide has figure(s) but body uses only default stacking
+  const imgCount = (html.match(/<img[^>]*>/gi) || []).filter(t => !/logo|uog|glasgow/i.test(t)).length;
+  if (imgCount >= 1 && !/uog-body-center|uog-body-grid-center|uog-body-composition|align-content:\s*center|justify-content:\s*center/.test(html)) {
+    issue('P2', 'Figure images present but no vertical centering detected — body content may stack downward from top. Use .uog-body-center or recognized centering layout.');
+  }
+}
+
+
+
+
+
+function checkNoEvidenceOnly(html) {
+  const nonLogoImgs = (html.match(/<img[^>]*>/gi) || []).filter(t => !/logo|uog|glasgow|Unboxed/i.test(t));
+  const isNormal = !/title-slide|closing-takeaway|section-divider/.test(html);
+  const INTERP = /uog-figure-description|uog-key-observation|uog-comparison-insight|uog-kpi-interpretation|uog-bottom-takeaway|uog-side-explanation|uog-compact-bottom-bullets/;
+
+  if (nonLogoImgs.length >= 1 && !INTERP.test(html) && isNormal) {
+    issue('P1', 'Figure evidence without interpretation — every figure slide needs .uog-figure-description, .uog-key-observation, or .uog-side-explanation.');
+  }
+  if (/uog-kpi-card|kpi-row/.test(html) && !INTERP.test(html) && isNormal) {
+    issue('P1', 'KPI evidence without interpretation — KPI cards need .uog-kpi-interpretation or .uog-bottom-takeaway.');
+  }
+}
+
+
+function checkEvidenceInterpretation(html) {
+  const INTERPRETATION_CLASSES = [
+    'uog-figure-description', 'uog-key-observation', 'uog-comparison-insight',
+    'uog-kpi-interpretation', 'uog-bottom-takeaway', 'uog-compact-bottom-bullets',
+    'uog-side-explanation', 'uog-mini-table', 'uog-figure-caption'
+  ];
+
+  const hasInterpretation = INTERPRETATION_CLASSES.some(c => html.includes(c));
+  const nonLogoImgs = (html.match(/<img[^>]*>/gi) || []).filter(t => !/logo|uog|glasgow|Unboxed/i.test(t));
+  const isNormalSlide = !/title-slide|closing-takeaway|section-divider/.test(html);
+
+  // Figure evidence without interpretation
+  if (nonLogoImgs.length >= 1 && !hasInterpretation && isNormalSlide) {
+    issue('P1', 'Figure evidence lacks interpretation layer — every figure slide needs caption + description, key observation, or takeaway. See references/evidence_interpretation_rules.md.');
+  }
+
+  // Two figures without shared comparison insight
+  if (nonLogoImgs.length >= 2 && !/uog-comparison-insight|uog-figure-description|uog-key-observation|uog-bottom-takeaway/.test(html) && isNormalSlide) {
+    issue('P1', 'Two-figure comparison lacks shared interpretation — add .uog-comparison-insight comparing both figures.');
+  }
+
+  // KPI cards without interpretation
+  const hasKpi = /uog-kpi-card|kpi-row/.test(html);
+  if (hasKpi && !/uog-kpi-interpretation|uog-bottom-takeaway|uog-key-observation/.test(html) && isNormalSlide) {
+    issue('P1', 'KPI evidence lacks interpretation — KPI cards need .uog-kpi-interpretation explaining what the numbers mean.');
+  }
+
+  // Interpretation detached/footer-like: paragraph after image but outside layout
+  const figFollowedByPara = /<img[^>]*>[\s\S]{0,400}<(?:p|div)[^>]*>(?![\s\S]*?(?:uog-figure-block|uog-composition|layout-))/i;
+  if (figFollowedByPara.test(html) && isNormalSlide) {
+    issue('P2', 'Possible footer-like interpretation — text after figure appears outside recognised composition wrapper. Attach interpretation to the figure block.');
+  }
+
+  // Caption only without description for figure-dominant slide
+  const hasFigcaptionOnly = /<figcaption/i.test(html) && !/uog-figure-description|uog-key-observation|uog-comparison-insight/.test(html);
+  if (hasFigcaptionOnly && nonLogoImgs.length >= 1 && isNormalSlide) {
+    issue('P2', 'Figure has caption but no description — a caption alone is not enough interpretation for a figure-dominant slide. Add .uog-figure-description.');
+  }
+}
+
+
+function checkCompositionGroup(html) {
+  // Recognised composition/layout classes
+  const COMPOSITION_CLASSES = [
+    'uog-composition', 'uog-body-composition', 'uog-body-center', 'uog-body-grid-center',
+    'layout-kpi-takeaway', 'layout-figure-top-description', 'layout-large-figure-with-description',
+    'layout-two-figure-plus-description', 'layout-stacked-figures-text',
+    'layout-figure-left', 'layout-figure-right', 'layout-text-list-centred',
+    'layout-two-figure-plus-takeaway', 'layout-figure-top-bullets-bottom',
+    'layout-big-bullets', 'layout-comparison', 'layout-two-column',
+    'layout-single-figure', 'layout-figure-top-takeaway',
+    'layout-large-figure-with-caption', 'layout-two-figure-two-caption'
+  ];
+
+  const hasComposition = COMPOSITION_CLASSES.some(c => html.includes(c));
+  const nonLogoImgs = (html.match(/<img[^>]*>/gi) || []).filter(t => !/logo|uog|glasgow|Unboxed/i.test(t));
+
+  // Figure-only detection: has images but no recognised composition wrapper
+  if (nonLogoImgs.length >= 1 && !hasComposition) {
+    // Exclude cover, closing, contents, section-divider
+    if (!/title-slide|closing-takeaway|section-divider|uog-agenda-list/.test(html)) {
+      issue('P1', 'Normal slide has figure image(s) but no recognised composition/layout class. Figures require a meaning layer — wrap in .uog-composition with caption+description. See references/composition_group_rules.md.');
+    }
+  }
+
+  // KPI-only detection: has kpi cards but no takeaway/interpretation
+  const hasKpi = /uog-kpi-card|kpi-row/.test(html);
+  const hasKpiTakeaway = /layout-kpi-takeaway/.test(html);
+  const hasTakeaway = /uog-bottom-takeaway/.test(html);
+  if (hasKpi && !hasKpiTakeaway && !hasTakeaway) {
+    issue('P1', 'KPI cards present without interpretation — use .layout-kpi-takeaway with a 25–55 word takeaway. KPI cards are evidence, not explanation.');
+  }
+
+  // Figure without caption/description
+  if (nonLogoImgs.length >= 1 && !/uog-figure-caption|uog-figure-description|figcaption|uog-bottom-takeaway/.test(html)) {
+    if (!/title-slide|closing-takeaway|section-divider|uog-agenda-list/.test(html)) {
+      issue('P1', 'Figure image(s) without caption or description — every figure must have a meaning layer. Use .uog-figure-block with .uog-figure-caption + .uog-figure-description.');
+    }
+  }
+
+  // Description/footer drift: figcaption or description outside figure block
+  const hasFigcaption = /<figcaption/i.test(html);
+  if (hasFigcaption && !/uog-figure-block/.test(html)) {
+    issue('P2', 'Figcaption used without .uog-figure-block — caption may appear footer-like. Wrap figure+caption in .uog-figure-block.');
+  }
+
+  // Body content likely placed too low: no centering wrapper
+  if (!hasComposition && !/align-content:\s*center|justify-content:\s*center/.test(html)) {
+    const normalSlideCount = (html.match(/class=["'][^"']*slide[^"']*["']/gi) || []).length;
+    if (normalSlideCount > 1 && !/title-slide|closing-takeaway|section-divider/.test(html)) {
+      issue('P2', 'Normal slide lacks centred composition — content may stack downward. Use .uog-composition wrapper with align-content: center.');
+    }
+  }
+}
+
+
+function checkFigureLayoutMatrix(html) {
+  // Detect figure images and check layout consistency
+  const imgTags = html.match(/<img[^>]*>/gi) || [];
+  const figureImgs = imgTags.filter(t => !/logo|uog|glasgow|Unboxed/i.test(t));
+
+  // Recognized figure layout classes
+  const FIGURE_LAYOUTS = [
+    'layout-single-figure', 'layout-figure-top-takeaway',
+    'layout-figure-left', 'layout-figure-right',
+    'layout-large-figure-with-caption', 'layout-two-figure-plus-takeaway',
+    'layout-two-figure-two-caption', 'layout-stacked-figures-text',
+    'layout-figure-grid', 'layout-kpi-takeaway',
+    'layout-figure-top-bullets-bottom'
+  ];
+
+  const hasFigureLayout = FIGURE_LAYOUTS.some(l => html.includes(l));
+
+  // If there are figure images (>1 non-logo img) but no recognized figure layout, warn
+  if (figureImgs.length >= 1 && !hasFigureLayout) {
+    // Don't flag if it's a cover/closing/normal-bullets slide
+    if (!/title-slide|closing-takeaway|layout-big-bullets/.test(html)) {
+      issue('P2', `Slide has ${figureImgs.length} figure image(s) but no recognized figure layout class. Use the matrix from references/figure_layout_matrix.md.`);
+    }
+  }
+
+  // Two figures without any two-figure layout
+  if (figureImgs.length >= 2 && !/layout-two-figure|layout-stacked-figures/.test(html)) {
+    if (!/title-slide|closing-takeaway/.test(html)) {
+      issue('P2', 'Two figure images without a two-figure layout class — use .layout-two-figure-plus-takeaway, .layout-two-figure-two-caption, or .layout-stacked-figures-text.');
+    }
+  }
+
+  // One image + long text (>3 bullets) but no side-column layout
+  const bulletCount = (html.match(/<li[^>]*>/gi) || []).length;
+  if (figureImgs.length === 1 && bulletCount > 3 && !/layout-figure-left|layout-figure-right|layout-split/.test(html)) {
+    issue('P2', 'One figure with >3 bullets — consider .layout-figure-left or .layout-figure-right instead of stacking.');
+  }
+}
+
+
 function checkCanonicalTemplates(html) {
   // Cover must use canonical structure
   if (/class=["'][^"']*title-slide[^"']*["']/.test(html)) {
@@ -695,6 +925,53 @@ function checkNoFooterLogos(html) {
     issue('P2', `${nonHeaderLogoCount} non-header logo images found — normal slides should have only the header logo block. Check for accidental footer/corner logos.`);
   }
 }
+
+
+function checkVisualBalance(html) {
+  // KPI-only underfilled: has kpi cards but no bottom takeaway
+  const hasKpiCards = /uog-kpi-card/.test(html);
+  const hasKpiTakeawayLayout = /layout-kpi-takeaway/.test(html);
+  const hasTakeaway = /uog-bottom-takeaway/.test(html);
+
+  if (hasKpiCards && !hasTakeaway && !hasKpiTakeawayLayout) {
+    issue('P2', 'KPI cards present but no bottom interpretation block — use .layout-kpi-takeaway with .uog-bottom-takeaway. See references/visual_balance_rules.md.');
+  }
+
+  // Figure + too many bullets (>3) without side-column layout
+  const figureBulletPattern = /<img[^>]*>[\s\S]{0,500}<(?:ul|ol)[\s\S]{0,1000}<\/(?:ul|ol)>/i;
+  if (figureBulletPattern.test(html)) {
+    const bulletMatches = html.match(/<li[^>]*>/gi) || [];
+    const imgMatches = html.match(/<img[^>]*>/gi) || [];
+    // Rough: if there are images and many list items on the same slide
+    if (imgMatches.length >= 1 && bulletMatches.length > 9) {
+      issue('P2', 'Figure with many bullets — use side-column layout or split. More than 3 bullets below a figure risks safe-area overflow. See references/visual_balance_rules.md.');
+    }
+  }
+
+  // Large figure without object-fit: contain or max-height constraint
+  const imgTags = html.match(/<img[^>]*>/gi) || [];
+  let unconstrainedImgs = 0;
+  for (const tag of imgTags) {
+    if (/logo|uog|glasgow/i.test(tag)) continue;
+    if (!/object-fit|max-height/.test(tag)) unconstrainedImgs++;
+  }
+  if (unconstrainedImgs > 2) {
+    issue('P2', `${unconstrainedImgs} figure images lack object-fit or max-height constraints — figures must scale to fit safe area.`);
+  }
+
+  // Underfilled: two figures, no caption, no takeaway
+  const imgTagsAll = html.match(/<img[^>]*>/gi) || [];
+  const figcaptions = (html.match(/<figcaption/gi) || []).length;
+  if (imgTagsAll.length >= 2 && figcaptions === 0 && !hasTakeaway) {
+    issue('P2', 'Two figures with no captions or takeaway — add interpretation or use .layout-two-figure-plus-takeaway.');
+  }
+
+  // Bottom takeaway too low check: if uog-bottom-takeaway exists but in a loose container
+  if (hasTakeaway && !hasKpiTakeawayLayout && !/layout-two-figure-plus-takeaway/.test(html)) {
+    issue('P2', 'Bottom takeaway present but not in a safe-area-controlled layout (.layout-kpi-takeaway or .layout-two-figure-plus-takeaway). Takeaway may render too low.');
+  }
+}
+
 
 function checkSafeArea(html) {
   // Warn if content may be below safe area
@@ -898,6 +1175,7 @@ Exit codes:
   const filePath = resolve(fileArg);
   const verbose = args.includes('--verbose');
   const checkLogos = args.includes('--check-logos');
+  const renderCheck = args.includes('--render-check');
   const jsonOutput = args.includes('--json');
 
   const html = checkFileExists(filePath);
@@ -918,14 +1196,24 @@ Exit codes:
   checkContentDensity(html);
   checkReducedMotionIntegrity(html);
   checkPrintOverrides(html);
+  checkTemplateInvariants(html);
+  checkVerticalComposition(html);
+  checkEvidenceInterpretation(html);
+  checkCompositionGroup(html);
+  checkFigureLayoutMatrix(html);
   checkCanonicalTemplates(html);
   checkFigureLayouts(html);
   checkCanonicalCover(html);
   checkNoFooterLogos(html);
+  checkVisualBalance(html);
   checkSafeArea(html);
   checkFigurePlacement(html);
   checkLayoutVariety(html);
   checkSlideHeaderSystem(html);
+  if (renderCheck) {
+    issue('INFO', '--render-check requested: run node scripts/check-rendered-layout.mjs <deck.html> for rendered geometry analysis. Requires: npm install playwright && npx playwright install chromium && npx playwright install-deps chromium');
+  }
+
   checkLogoManifest(html, checkLogos);
 
   let exitCode;

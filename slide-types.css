@@ -97,6 +97,45 @@
   left: var(--slide-padding, 80px);
   right: var(--slide-padding, 80px);
   bottom: var(--slide-padding, 80px);
+  min-height: 0;
+}
+
+/* Body centering primitives */
+.uog-body-center {
+  height: 100%;
+  display: flex; flex-direction: column;
+  justify-content: center; min-height: 0;
+}
+.uog-body-grid-center {
+  height: 100%;
+  display: grid; align-content: center; min-height: 0;
+}
+.uog-body-composition {
+  width: 100%; max-height: 100%;
+  display: grid; gap: 28px;
+  align-content: center; min-height: 0;
+}
+
+/* Figure block: caption + description attached to figure */
+.uog-figure-block {
+  margin: 0; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; min-height: 0;
+}
+.uog-figure-block img {
+  max-width: 100%;
+  max-height: var(--uog-figure-max-height, 560px);
+  object-fit: contain;
+}
+.uog-figure-caption {
+  margin-top: 14px;
+  font-size: clamp(20px, 1.05vw, 26px); line-height: 1.25;
+  color: var(--text-secondary); text-align: center; max-width: 1200px;
+}
+.uog-figure-description {
+  margin: 12px auto 0;
+  max-width: 1280px;
+  font-size: clamp(25px, 1.35vw, 32px); line-height: 1.28;
+  color: var(--uog-blue); text-align: center;
 }
 
 /* ==========================================================================
@@ -938,6 +977,29 @@
 }
 
 /* ==========================================================================
+   Alignment Primitives
+   ========================================================================== */
+
+.uog-composition {
+  height: 100%; min-height: 0;
+  display: grid; gap: 24px;
+}
+.uog-align-top { align-content: start; }
+.uog-align-centre { align-content: center; }
+.uog-align-balanced { align-content: center; }
+
+.uog-composition--figure-text {
+  height: 100%;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 56px; align-items: start;
+}
+.uog-composition--two-figures {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 44px; align-items: start;
+}
+
+/* ==========================================================================
    Figure Layouts
    ========================================================================== */
 
@@ -989,6 +1051,26 @@
   text-align: center;
 }
 
+/* Commentary / Interpretation Block */
+.uog-commentary-block {
+  max-width: 1280px;
+  margin: 18px auto 0;
+  padding: 20px 28px;
+  border-left: 8px solid var(--accent, #005398);
+  background: rgba(0, 83, 152, 0.06);
+  color: var(--uog-blue);
+  font-size: clamp(24px, 1.25vw, 30px);
+  line-height: 1.28;
+  text-align: left;
+}
+.uog-commentary-block strong,
+.uog-commentary-label {
+  font-weight: 700;
+  color: var(--uog-blue);
+}
+.uog-commentary-block ul { margin: 8px 0 0; padding-left: 1.1em; }
+.uog-commentary-block li { margin: 6px 0; }
+
 /* Bottom Takeaway Band */
 .uog-bottom-takeaway {
   border-left: 8px solid var(--accent, #005398);
@@ -998,6 +1080,146 @@
   font-size: clamp(26px, 1.4vw, 34px);
   line-height: 1.28; color: var(--uog-blue);
 }
+
+/* ==========================================================================
+   Figure Layout Matrix — New Layouts
+   ========================================================================== */
+
+/* Figure Top + Takeaway (wide figures) */
+.layout-figure-top-takeaway .uog-slide-body {
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
+  gap: 28px; height: 100%; min-height: 0;
+}
+.layout-figure-top-takeaway figure {
+  min-height: 0; display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+}
+.layout-figure-top-takeaway figure img {
+  max-width: 100%; max-height: 560px; object-fit: contain;
+}
+.layout-figure-top-takeaway figcaption {
+  margin-top: 12px;
+  font-size: clamp(22px, 1.2vw, 28px); color: var(--text-secondary); text-align: center;
+}
+
+/* Two Figures + Two Captions (independent descriptions) */
+.layout-two-figure-two-caption .uog-slide-body {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px; height: 100%; align-content: center;
+}
+.layout-two-figure-two-caption .fig-col {
+  display: flex; flex-direction: column; align-items: center;
+  gap: 16px;
+}
+.layout-two-figure-two-caption .fig-col img {
+  max-width: 100%; max-height: 480px; object-fit: contain;
+}
+.layout-two-figure-two-caption .fig-col figcaption {
+  font-size: clamp(22px, 1.2vw, 28px); color: var(--text-secondary); text-align: center;
+}
+.layout-two-figure-two-caption .fig-col .fig-desc {
+  font-size: clamp(24px, 1.3vw, 30px); color: var(--uog-blue); line-height: 1.3;
+}
+
+/* Stacked Figures + Text Column */
+.layout-stacked-figures-text .uog-slide-body {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 42px; height: 100%; align-content: center;
+}
+.layout-stacked-figures-text .fig-stack {
+  display: grid; grid-template-rows: 1fr 1fr; gap: 20px;
+}
+.layout-stacked-figures-text .fig-stack figure {
+  display: flex; flex-direction: column; align-items: center;
+  justify-content: center; min-height: 0;
+}
+.layout-stacked-figures-text .fig-stack img {
+  max-width: 100%; max-height: 260px; object-fit: contain;
+}
+.layout-stacked-figures-text .fig-stack figcaption {
+  margin-top: 8px; font-size: clamp(20px, 1.1vw, 26px); color: var(--text-secondary); text-align: center;
+}
+.layout-stacked-figures-text .fig-text {
+  display: flex; flex-direction: column; justify-content: center;
+  gap: 12px;
+}
+
+/* Large Figure + Caption (complex figure, minimal text) */
+.layout-large-figure-with-caption .uog-slide-body {
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  height: 100%; gap: 16px;
+}
+.layout-large-figure-with-caption img {
+  max-width: 100%; max-height: 680px; object-fit: contain;
+}
+.layout-large-figure-with-caption figcaption {
+  font-size: clamp(22px, 1.3vw, 30px); color: var(--text-secondary); text-align: center; max-width: 1200px;
+}
+
+/* KPI + Takeaway Layout */
+.layout-kpi-takeaway .uog-slide-body {
+  display: grid;
+  grid-template-rows: 1fr auto;
+  gap: 42px; height: 100%; min-height: 0;
+}
+.uog-kpi-row-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 42px; align-self: center;
+}
+.uog-kpi-card {
+  min-height: 190px;
+  padding: 42px 30px;
+  border: 1px solid var(--border-color);
+  background: #fff;
+  display: flex; flex-direction: column;
+  justify-content: center; text-align: center;
+}
+.uog-kpi-card .uog-kpi-value {
+  font-family: var(--font-display);
+  font-size: clamp(54px, 4vw, 82px);
+  line-height: 1; color: var(--uog-blue); font-weight: 700;
+}
+.uog-kpi-card .uog-kpi-label {
+  margin-top: 20px;
+  font-family: var(--font-body);
+  font-size: clamp(22px, 1.3vw, 30px);
+  line-height: 1.2; color: var(--text-secondary);
+  text-transform: uppercase; letter-spacing: 0.08em;
+}
+
+/* Figure Top + Compact Bullets Bottom */
+.layout-figure-top-bullets-bottom .uog-slide-body {
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
+  gap: 26px; height: 100%; min-height: 0;
+}
+.layout-figure-top-bullets-bottom .uog-main-figure {
+  min-height: 0;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+}
+.layout-figure-top-bullets-bottom .uog-main-figure img {
+  max-width: 82%; max-height: 500px; object-fit: contain;
+}
+.layout-figure-top-bullets-bottom figcaption {
+  margin-top: 12px;
+  font-size: clamp(20px, 1.1vw, 26px); line-height: 1.25;
+  color: var(--text-secondary); text-align: center;
+}
+.uog-compact-bottom-bullets {
+  margin: 0; padding: 18px 28px 18px 42px;
+  border-left: 8px solid var(--accent);
+  background: rgba(0, 83, 152, 0.05);
+  font-size: clamp(24px, 1.35vw, 30px); line-height: 1.25;
+  color: var(--uog-blue); max-height: 180px; overflow: hidden;
+}
+.uog-compact-bottom-bullets li { margin-bottom: 8px; }
+.uog-compact-bottom-bullets li:last-child { margin-bottom: 0; }
 
 /* ==========================================================================
    SECTION B: Component Classes

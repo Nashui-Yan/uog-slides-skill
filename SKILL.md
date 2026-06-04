@@ -169,20 +169,36 @@ Figure layouts: `references/figure_layout_decision_rules.md`
 
 ### Canonical Template Lock
 
-The following slide types are **LOCKED** canonical templates. The generator
-may replace text content, but must NOT change visual structure, geometry,
-logo placement, or layout style:
+Cover, closing, and contents slides are **not layout-generation tasks.** They
+are **template-instantiation tasks.** Copy the canonical template structure
+from the demo and replace text only.
+
+Full template HTML snippets: `references/template_invariants.md`
 
 1. **Cover page** — White bg, full-width blue band, bottom-left logo row
 2. **Contents page** — Normal header, structured agenda rows (`.uog-agenda-list`)
 3. **Closing page** — White bg, full-width blue band, bottom-left logo row
 4. **Normal header** — Blue logo block flush left, title/subtitle right
 
-> Cover, closing, and contents slides are canonical templates. They are not
-> adaptive layouts. Source documents may provide their text content, but
-> must not change their visual style.
+> Do not create a new cover logo arrangement. Use the canonical cover logo
+> row exactly. Do not create a new closing logo arrangement. Use the
+> canonical closing logo row exactly.
 
-Full specification: `references/canonical_templates.md`
+### Cross-Project Consistency
+
+Same content pattern must map to same layout pattern across all projects:
+- KPI slides always use `.layout-kpi-takeaway`
+- One wide figure + short explanation → `.layout-figure-top-takeaway`
+- One near-square/tall figure + explanation → `.layout-figure-left` or `.layout-figure-right`
+- Two comparable figures → `.layout-two-figure-plus-takeaway` or `.layout-two-figure-two-caption`
+- Two stacked figures + discussion → `.layout-stacked-figures-text`
+- Complex figure only → `.layout-large-figure-with-caption`
+- Contents always uses canonical agenda-row template
+- Cover/closing always use canonical templates
+
+> Do not invent a new layout if an existing pattern in the matrix applies.
+
+Full layout decision matrix: `references/figure_layout_matrix.md`
 
 ### Source Separation
 
@@ -196,6 +212,61 @@ Normal slides use ONLY the header logo inside `.uog-logo-blue-block`.
 No bottom-right logos, footer logos, corner marks, partner logos, or
 source-document logos. Partner logos: cover/closing only, only if user
 explicitly requests. See `references/layout_quality_rules.md` Rule 3+8.
+
+### Evidence + Interpretation Contract
+
+Read `references/evidence_interpretation_rules.md` for the full specification.
+
+> Every normal content slide must present a complete argument: claim, evidence,
+> and interpretation. The title/subtitle provide the claim; figures, KPI cards,
+> tables, or diagrams provide evidence; and every evidence block must be
+> accompanied by an interpretation layer.
+
+**Interpretation layer** can be: `.uog-figure-description`, `.uog-key-observation`,
+`.uog-comparison-insight`, `.uog-kpi-interpretation`, `.uog-bottom-takeaway`,
+`.uog-compact-bottom-bullets`, or `.uog-side-explanation`.
+
+> Captions identify evidence; descriptions interpret evidence. A caption
+> alone is not enough for a figure-dominant slide.
+
+**No figure-only slides.** Every figure slide needs caption + interpretation.
+**No KPI-only slides.** KPI cards need interpretation paragraph.
+**Two-figure comparisons** need shared comparison insight.
+**Vertical centring** applies to the complete evidence + interpretation group,
+not to the evidence alone.
+
+### Composition Group Rule
+
+### Global Top Alignment
+
+Read `references/global_top_alignment_policy.md` for the full specification.
+
+> ALL normal content slides must use top alignment inside the body region.
+> No ordinary content slide uses body-level vertical centring.
+
+Key rules:
+- Body region: top ≈300px, bottom ≈920px
+- First meaningful content starts near bodyTop
+- `.uog-slide-body` defines the region only — no global centring
+- Composition wrappers default to top alignment
+- Text blocks: top-left aligned; Figure blocks: top-aligned with caption+description attached
+- Figure+text: columns top-align; Two-figure: both panels top-align
+- Cover, contents, closing, section dividers remain canonical and unchanged
+- Fixed 1920×1080 design coordinates; higher resolutions use uniform scaling only
+
+### Visual Balance and Safe Area
+
+Read `references/visual_balance_rules.md` for the full specification.
+
+Key rules:
+- Content must stay within body safe area (y ≤ 900px preferred, y ≤ 940px max)
+- Reserve ≥80px bottom breathing room
+- Never push content downward to solve layout — reduce figure size, use side
+  column, or split the slide
+- KPI-only slides are incomplete — must add bottom interpretation band
+- Figure + >3 bullets → use side-column, not figure-top/bullets-bottom
+- Large figures: scale to fit safe area using concrete max-height limits
+- Underfilled slides (>35% blank) → add short takeaway, don't enlarge
 
 ### Figure Layout Decision Rules
 

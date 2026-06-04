@@ -1,0 +1,26 @@
+{
+  "name": "nashui-uog-slides-skill",
+  "version": "1.0.0",
+  "description": "A Claude Code skill for generating University of Glasgow branded HTML slide decks. Designed for academic, technical, and research presentations.",
+  "main": "index.js",
+  "directories": {
+    "example": "examples"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Nashui-Yan/uog-slides-skill.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Nashui-Yan/uog-slides-skill/issues"
+  },
+  "homepage": "https://github.com/Nashui-Yan/uog-slides-skill#readme",
+  "dependencies": {
+    "playwright": "^1.60.0"
+  }
+}
